@@ -161,6 +161,11 @@
       background: var(--purple-light);
       color: var(--purple);
     }
+    .badge-achievement {
+      background: #fef3c7;
+      color: #92400e;
+      font-size: .6rem;
+    }
     .avatar {
       width: 44px;
       height: 44px;
@@ -1005,6 +1010,48 @@
       min-width: 40px;
       text-align: right;
     }
+    /* Achievement badge colors */
+    .achieve-badge {
+      display: inline-block;
+      padding: .15rem .6rem;
+      border-radius: var(--radius-full);
+      font-size: .6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+    .achieve-badge.tech {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .achieve-badge.design {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+    .achieve-badge.learning {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .achieve-badge.career {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .achieve-badge.creative {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+    .achieve-badge.business {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .achieve-badge.community {
+      background: #fce4ec;
+      color: #880e4f;
+    }
+    .achieve-badge.milestone {
+      background: #ffecb3;
+      color: #e65100;
+    }
     @media(max-width:1024px) {
       .main {
         padding: 1.25rem;
@@ -1149,7 +1196,7 @@
       <section id="page-market" class="page hidden">
         <div class="page-header"><h1>Marketplace</h1><p>Buy and sell digital products, services, and courses.</p></div>
         <button class="btn btn-primary" style="margin-bottom:1rem;" id="showProductModal"><i class="fas fa-plus"></i> List a Product</button>
-        <div class="market-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;"><div style="text-align:center;grid-column:1/-1;padding:2rem;color:var(--text-muted);"><i class="fas fa-store" style="font-size:2rem;"></i><p style="margin-top:.5rem;">No products yet. List your first product!</p></div></div>
+        <div class="market-grid" id="marketGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;"><div style="text-align:center;grid-column:1/-1;padding:2rem;color:var(--text-muted);"><i class="fas fa-store" style="font-size:2rem;"></i><p style="margin-top:.5rem;">No products yet. List your first product!</p></div></div>
       </section>
 
       <!-- ===== PAGE: CHAT ===== -->
@@ -1239,7 +1286,7 @@
     </main>
   </div>
 
-  <!-- ===== COMPOSER MODAL ===== -->
+  <!-- ===== COMPOSER MODAL (General) ===== -->
   <div class="modal-overlay" id="composerModal">
     <div class="modal-content">
       <button class="close" id="composerModalClose">&times;</button>
@@ -1253,11 +1300,12 @@
         <button class="type-btn" data-type="pdf"><i class="fas fa-file-pdf"></i> PDF</button>
         <button class="type-btn" data-type="project"><i class="fas fa-folder-open"></i> Project</button>
         <button class="type-btn" data-type="poll"><i class="fas fa-poll"></i> Poll</button>
-        <button class="type-btn" data-type="question"><i class="fas fa-question-circle"></i> Question</button>
-        <button class="type-btn" data-type="achievement"><i class="fas fa-trophy"></i> Achievement</button>
-        <button class="type-btn" data-type="opportunity"><i class="fas fa-briefcase"></i> Opportunity</button>
-        <button class="type-btn" data-type="product"><i class="fas fa-tag"></i> Product</button>
-        <button class="type-btn" data-type="event"><i class="fas fa-calendar"></i> Event</button>
+        <!-- These 5 types will redirect to specific modals instead of opening this composer -->
+        <button class="type-btn" data-type="question" style="border-color:var(--purple);"><i class="fas fa-question-circle"></i> Question</button>
+        <button class="type-btn" data-type="achievement" style="border-color:var(--gold-dark);"><i class="fas fa-trophy"></i> Achievement</button>
+        <button class="type-btn" data-type="opportunity" style="border-color:var(--blue);"><i class="fas fa-briefcase"></i> Opportunity</button>
+        <button class="type-btn" data-type="product" style="border-color:var(--green);"><i class="fas fa-tag"></i> Product</button>
+        <button class="type-btn" data-type="event" style="border-color:var(--pink);"><i class="fas fa-calendar"></i> Event</button>
         <button class="type-btn" data-type="learning"><i class="fas fa-graduation-cap"></i> Learning</button>
       </div>
 
@@ -1266,7 +1314,6 @@
         <textarea class="form-control" id="composerContent" rows="4" placeholder="What's on your mind?"></textarea>
       </div>
 
-      <!-- Upload area (shown for photo/video/audio/pdf) -->
       <div class="upload-area" id="uploadArea" style="display:none;">
         <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
         <div class="upload-text" id="uploadText">Choose files</div>
@@ -1274,22 +1321,18 @@
         <input type="file" id="composerFileInput" accept="image/*,video/*,audio/*,.pdf" multiple />
       </div>
 
-      <!-- Media Preview -->
       <div class="media-preview" id="mediaPreview"></div>
 
-      <!-- Poll Options (shown for poll type) -->
       <div class="composer-field" id="pollOptionsField" style="display:none;">
         <label>Poll Options (one per line)</label>
         <textarea class="form-control" id="composerPollOptions" rows="3" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
       </div>
 
-      <!-- Video link (shown for video type) -->
       <div class="composer-field" id="videoLinkField" style="display:none;">
         <label>Or paste a video link</label>
         <input class="form-control" id="composerVideoLink" placeholder="YouTube, Vimeo, Drive, etc." />
       </div>
 
-      <!-- Skills Section -->
       <div class="skills-section">
         <div class="skills-label">Skills <span style="font-weight:400;color:var(--text-muted);font-size:.7rem;">(up to 5)</span></div>
         <div class="skills-input-row">
@@ -1312,6 +1355,103 @@
       <button class="btn btn-primary btn-block" id="composerPublishBtn" style="margin-top:.5rem;">
         <i class="fas fa-bolt"></i> Publish Spark
       </button>
+    </div>
+  </div>
+
+  <!-- ===== ACHIEVEMENT MODAL ===== -->
+  <div class="modal-overlay" id="achievementModal">
+    <div class="modal-content">
+      <button class="close" id="achievementModalClose">&times;</button>
+      <h3 style="margin-bottom:.5rem;"><i class="fas fa-trophy" style="color:var(--gold-dark);"></i> Share Your <span class="text-gradient">Achievement</span></h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">Celebrate your wins! What did you accomplish?</p>
+
+      <div class="form-group">
+        <label class="form-label">Achievement Title <span style="color:red;">*</span></label>
+        <input class="form-control" id="achieveTitle" placeholder="e.g., Completed my first React project" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" id="achieveCategory">
+          <option value="tech">💻 Tech / Coding</option>
+          <option value="design">🎨 Design / Creative</option>
+          <option value="learning">📚 Learning / Course</option>
+          <option value="career">💼 Career / Job</option>
+          <option value="creative">✨ Creative / Art</option>
+          <option value="business">🏢 Business / Startup</option>
+          <option value="community">🌍 Community / Impact</option>
+          <option value="milestone">🏆 Milestone / Personal</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="achieveDesc" rows="3" placeholder="Tell us about your achievement..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date achieved</label>
+        <input class="form-control" id="achieveDate" type="date" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Link (optional)</label>
+        <input class="form-control" id="achieveLink" placeholder="https://your-project.com or GitHub repo" />
+      </div>
+
+      <div class="skills-section">
+        <div class="skills-label">Skills demonstrated</div>
+        <div class="skills-input-row">
+          <input class="form-control" id="achieveSkillsInput" placeholder="Add a skill (press Enter)" />
+          <button class="btn btn-primary btn-sm" id="achieveAddSkillBtn">Add</button>
+        </div>
+        <div class="skills-chips" id="achieveSkillsChips"></div>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="achievePublishBtn"><i class="fas fa-trophy"></i> Share Achievement</button>
+    </div>
+  </div>
+
+  <!-- ===== QUESTION MODAL ===== -->
+  <div class="modal-overlay" id="questionModal">
+    <div class="modal-content">
+      <button class="close" id="questionModalClose">&times;</button>
+      <h3 style="margin-bottom:.5rem;"><i class="fas fa-question-circle" style="color:var(--purple);"></i> Ask a <span class="text-gradient">Question</span></h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">Get answers from the community.</p>
+
+      <div class="form-group">
+        <label class="form-label">Question <span style="color:red;">*</span></label>
+        <input class="form-control" id="questionTitle" placeholder="What do you want to ask?" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Details (optional)</label>
+        <textarea class="form-control" id="questionDesc" rows="3" placeholder="Provide more context..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" id="questionCategory">
+          <option value="tech">💻 Technology</option>
+          <option value="design">🎨 Design</option>
+          <option value="career">💼 Career</option>
+          <option value="learning">📚 Learning</option>
+          <option value="business">🏢 Business</option>
+          <option value="creative">✨ Creative</option>
+          <option value="community">🌍 Community</option>
+        </select>
+      </div>
+
+      <div class="skills-section">
+        <div class="skills-label">Related skills</div>
+        <div class="skills-input-row">
+          <input class="form-control" id="questionSkillsInput" placeholder="Add a skill (press Enter)" />
+          <button class="btn btn-primary btn-sm" id="questionAddSkillBtn">Add</button>
+        </div>
+        <div class="skills-chips" id="questionSkillsChips"></div>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="questionPublishBtn"><i class="fas fa-paper-plane"></i> Ask Question</button>
     </div>
   </div>
 
@@ -1396,7 +1536,7 @@
   </div>
 
   <!-- ================================================================ -->
-  <!-- JAVASCRIPT – FULL SPARK CONTENT CREATION SYSTEM -->
+  <!-- JAVASCRIPT – FULL SPARK SYSTEM WITH REDIRECTS -->
   <!-- ================================================================ -->
   <script>
     (function() {
@@ -1569,11 +1709,41 @@
         if (s.type === 'poll' && s.pollOptions && s.pollOptions.length > 0) {
           pollDisplay = `<div style="margin-top:.5rem;font-size:.85rem;color:var(--text-secondary);"><strong>Poll:</strong> ${s.pollOptions.join(' | ')}</div>`;
         }
+        // Achievement badge
+        let achieveBadge = '';
+        if (s.type === 'achievement' && s.achieveCategory) {
+          const cats = {
+            tech: 'Tech',
+            design: 'Design',
+            learning: 'Learning',
+            career: 'Career',
+            creative: 'Creative',
+            business: 'Business',
+            community: 'Community',
+            milestone: 'Milestone'
+          };
+          achieveBadge =
+            `<span class="achieve-badge ${s.achieveCategory}">${cats[s.achieveCategory] || 'Achievement'}</span>`;
+        }
+        // Question category badge
+        let questionBadge = '';
+        if (s.type === 'question' && s.questionCategory) {
+          const cats = {
+            tech: '💻 Tech',
+            design: '🎨 Design',
+            career: '💼 Career',
+            learning: '📚 Learning',
+            business: '🏢 Business',
+            creative: '✨ Creative',
+            community: '🌍 Community'
+          };
+          questionBadge = `<span class="badge badge-purple">${cats[s.questionCategory] || 'Question'}</span>`;
+        }
         return `
           <div class="spark" data-id="${s.id}">
             <div class="spark-header">
               <div class="avatar">${s.author.avatarData ? `<img src="${s.author.avatarData}" alt="avatar" />` : s.author.avatar}</div>
-              <div class="info"><div class="name">${s.author.name}</div><div class="handle"><span class="badge badge-purple" style="font-size:.6rem;">${s.type.toUpperCase()}</span> · ${s.time || 'Just now'}</div></div>
+              <div class="info"><div class="name">${s.author.name}</div><div class="handle"><span class="badge badge-purple" style="font-size:.6rem;">${s.type.toUpperCase()}</span> ${achieveBadge} ${questionBadge} · ${s.time || 'Just now'}</div></div>
             </div>
             <div class="spark-content"><div class="spark-text">${s.content}</div>${s.skills && s.skills.length ? `<div class="spark-skills">${s.skills.map(sk => `<span class="skill">#${sk}</span>`).join('')}</div>` : ''}${pollDisplay}${mediaHTML}</div>
             <div class="spark-actions">
@@ -1587,17 +1757,14 @@
       }
 
       function attachSparkCardEvents(container) {
-        // Click on spark card to open detail
         container.querySelectorAll('.spark').forEach(el => {
           el.addEventListener('click', function(e) {
-            // Don't open detail if clicking on an action button
             if (e.target.closest('.action')) return;
             const id = this.dataset.id;
             openSparkDetail(id);
           });
         });
 
-        // Like button
         container.querySelectorAll('.like-btn').forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -1613,7 +1780,6 @@
           });
         });
 
-        // Comment button
         container.querySelectorAll('.comment-btn').forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -1622,7 +1788,6 @@
           });
         });
 
-        // Reshare button
         container.querySelectorAll('.reshare-btn').forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -1637,7 +1802,6 @@
           });
         });
 
-        // Share button
         container.querySelectorAll('.share-btn').forEach(btn => {
           btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -1701,26 +1865,96 @@
           `;
         }
 
+        let actionButtons = '';
+        if (spark.type === 'opportunity') {
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm" onclick="navigateTo('opportunities')"><i class="fas fa-paper-plane"></i> View in Opportunities</button></div>`;
+        } else if (spark.type === 'product' || spark.type === 'event') {
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm" onclick="navigateTo('market')"><i class="fas fa-shopping-cart"></i> View in Market</button></div>`;
+        } else if (spark.type === 'achievement') {
+          const catLabels = {
+            tech: '💻 Tech',
+            design: '🎨 Design',
+            learning: '📚 Learning',
+            career: '💼 Career',
+            creative: '✨ Creative',
+            business: '🏢 Business',
+            community: '🌍 Community',
+            milestone: '🏆 Milestone'
+          };
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><span class="achieve-badge ${spark.achieveCategory || 'milestone'}">${catLabels[spark.achieveCategory] || 'Achievement'}</span> <span style="margin-left:.5rem;font-size:.85rem;color:var(--text-secondary);">${spark.achieveDate || ''}</span></div>`;
+        } else if (spark.type === 'question') {
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><div style="display:flex;gap:.5rem;"><input class="form-control" style="flex:1;" placeholder="Share your answer..." /><button class="btn btn-primary btn-sm">Answer</button></div></div>`;
+        } else if (spark.type === 'learning') {
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-graduation-cap"></i> Continue Learning</button></div>`;
+        } else if (spark.type === 'project') {
+          actionButtons =
+            `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-folder-open"></i> View Project</button></div>`;
+        }
+
+        // Achievement category display
+        let achieveDetail = '';
+        if (spark.type === 'achievement') {
+          const catLabels = {
+            tech: '💻 Tech / Coding',
+            design: '🎨 Design / Creative',
+            learning: '📚 Learning / Course',
+            career: '💼 Career / Job',
+            creative: '✨ Creative / Art',
+            business: '🏢 Business / Startup',
+            community: '🌍 Community / Impact',
+            milestone: '🏆 Milestone / Personal'
+          };
+          achieveDetail = `
+            <div style="margin:.5rem 0;display:flex;gap:.5rem;flex-wrap:wrap;">
+              <span class="achieve-badge ${spark.achieveCategory || 'milestone'}">${catLabels[spark.achieveCategory] || 'Achievement'}</span>
+              ${spark.achieveDate ? `<span style="font-size:.8rem;color:var(--text-muted);">📅 ${spark.achieveDate}</span>` : ''}
+              ${spark.achieveLink ? `<span style="font-size:.8rem;"><a href="${spark.achieveLink}" target="_blank" style="color:var(--purple);"><i class="fas fa-link"></i> Link</a></span>` : ''}
+            </div>
+          `;
+        }
+
+        // Question category
+        let questionDetail = '';
+        if (spark.type === 'question' && spark.questionCategory) {
+          const cats = {
+            tech: '💻 Technology',
+            design: '🎨 Design',
+            career: '💼 Career',
+            learning: '📚 Learning',
+            business: '🏢 Business',
+            creative: '✨ Creative',
+            community: '🌍 Community'
+          };
+          questionDetail =
+            `<div style="margin:.5rem 0;"><span class="badge badge-purple">${cats[spark.questionCategory] || 'Question'}</span></div>`;
+        }
+
         content.innerHTML = `
           <div class="spark-detail">
             <div class="spark-header">
               <div class="avatar">${spark.author.avatarData ? `<img src="${spark.author.avatarData}" alt="avatar" />` : spark.author.avatar}</div>
               <div class="info"><div class="name">${spark.author.name}</div><div class="handle"><span class="badge badge-purple">${spark.type.toUpperCase()}</span> · ${spark.time || 'Just now'}</div></div>
             </div>
-            <div class="spark-content"><div class="spark-text">${spark.content}</div>${spark.skills && spark.skills.length ? `<div class="spark-skills">${spark.skills.map(sk => `<span class="skill">#${sk}</span>`).join('')}</div>` : ''}${pollHTML}${mediaHTML}</div>
+            <div class="spark-content">
+              <div class="spark-text">${spark.content}</div>
+              ${spark.skills && spark.skills.length ? `<div class="spark-skills">${spark.skills.map(sk => `<span class="skill">#${sk}</span>`).join('')}</div>` : ''}
+              ${questionDetail}
+              ${achieveDetail}
+              ${pollHTML}
+              ${mediaHTML}
+            </div>
             <div class="spark-actions">
               <button class="action like-btn-detail" data-id="${spark.id}"><i class="fas fa-heart"></i> <span class="count">${spark.likes || 0}</span></button>
               <button class="action comment-btn-detail" data-id="${spark.id}"><i class="fas fa-comment"></i> <span class="count">${spark.comments || 0}</span></button>
               <button class="action reshare-btn-detail" data-id="${spark.id}"><i class="fas fa-retweet"></i> <span class="count">${spark.reSparks || 0}</span></button>
               <button class="action share-btn-detail" data-id="${spark.id}"><i class="fas fa-share"></i></button>
             </div>
-            ${spark.type === 'opportunity' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-paper-plane"></i> Apply Now</button></div>` : ''}
-            ${spark.type === 'product' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-shopping-cart"></i> View Product</button></div>` : ''}
-            ${spark.type === 'event' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> Register</button></div>` : ''}
-            ${spark.type === 'learning' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-graduation-cap"></i> Continue Learning</button></div>` : ''}
-            ${spark.type === 'project' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><button class="btn btn-primary btn-sm"><i class="fas fa-folder-open"></i> View Project</button></div>` : ''}
-            ${spark.type === 'achievement' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><span class="badge badge-gold"><i class="fas fa-trophy"></i> Achievement</span></div>` : ''}
-            ${spark.type === 'question' ? `<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);"><div style="display:flex;gap:.5rem;"><input class="form-control" style="flex:1;" placeholder="Share your answer..." /><button class="btn btn-primary btn-sm">Answer</button></div></div>` : ''}
+            ${actionButtons}
           </div>
         `;
 
@@ -1766,7 +2000,6 @@
           });
         });
 
-        // Poll voting in detail
         content.querySelectorAll('.poll-option').forEach(el => {
           el.addEventListener('click', function() {
             const id = this.dataset.poll;
@@ -1843,7 +2076,7 @@
 
       // ----- MARKET -----
       function renderMarket() {
-        const grid = document.querySelector('.market-grid');
+        const grid = document.getElementById('marketGrid');
         if (!grid) return;
         if (state.products.length === 0) {
           grid.innerHTML =
@@ -1937,7 +2170,6 @@
             el.textContent = u.avatar || getInitials(u.name);
           }
         });
-        // Edit modal fields
         const editName = document.getElementById('editName');
         if (editName) editName.value = u.name;
         const editTitle = document.getElementById('editTitle');
@@ -1949,7 +2181,6 @@
         const editSkillsInput = document.getElementById('editSkillsInput');
         if (editSkillsInput) editSkillsInput.value = u.skills ? u.skills.join(', ') : '';
         renderSkillTags(u.skills || []);
-        // Preview images
         const editCoverPreview = document.getElementById('editCoverPreview');
         if (editCoverPreview) {
           if (u.coverData) {
@@ -2437,13 +2668,244 @@
       });
 
       // ================================================================
-      // COMPOSER – FULL SPARK CREATION
+      // ACHIEVEMENT MODAL
+      // ================================================================
+      let achieveSkills = [];
+
+      function openAchievementModal() {
+        const modal = document.getElementById('achievementModal');
+        if (modal) modal.classList.add('active');
+        document.getElementById('achieveTitle').value = '';
+        document.getElementById('achieveDesc').value = '';
+        document.getElementById('achieveDate').value = '';
+        document.getElementById('achieveLink').value = '';
+        document.getElementById('achieveSkillsInput').value = '';
+        achieveSkills = [];
+        renderAchieveSkills();
+        document.getElementById('achieveTitle').focus();
+      }
+
+      function closeAchievementModal() {
+        const modal = document.getElementById('achievementModal');
+        if (modal) modal.classList.remove('active');
+      }
+
+      document.getElementById('achievementModalClose')?.addEventListener('click', closeAchievementModal);
+      document.getElementById('achievementModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeAchievementModal();
+      });
+
+      document.getElementById('achieveAddSkillBtn')?.addEventListener('click', function() {
+        const input = document.getElementById('achieveSkillsInput');
+        const val = input?.value.trim();
+        if (!val) return;
+        const skills = val.split(',').map(s => s.trim()).filter(Boolean);
+        skills.forEach(s => {
+          if (!achieveSkills.includes(s) && achieveSkills.length < 5) {
+            achieveSkills.push(s);
+          }
+        });
+        renderAchieveSkills();
+        if (input) input.value = '';
+      });
+
+      document.getElementById('achieveSkillsInput')?.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('achieveAddSkillBtn')?.click();
+        }
+      });
+
+      function renderAchieveSkills() {
+        const container = document.getElementById('achieveSkillsChips');
+        if (!container) return;
+        container.innerHTML = achieveSkills.map(s =>
+          `<span class="chip">${s} <span class="remove" data-skill="${s}">&times;</span></span>`
+        ).join('');
+        container.querySelectorAll('.chip .remove').forEach(el => {
+          el.addEventListener('click', function() {
+            const skill = this.dataset.skill;
+            achieveSkills = achieveSkills.filter(s => s !== skill);
+            renderAchieveSkills();
+          });
+        });
+      }
+
+      document.getElementById('achievePublishBtn')?.addEventListener('click', function() {
+        const title = document.getElementById('achieveTitle')?.value.trim();
+        const desc = document.getElementById('achieveDesc')?.value.trim();
+        const category = document.getElementById('achieveCategory')?.value;
+        const date = document.getElementById('achieveDate')?.value;
+        const link = document.getElementById('achieveLink')?.value.trim();
+
+        if (!title) {
+          showToast('Please enter an achievement title.', 'error');
+          return;
+        }
+
+        const newSpark = {
+          id: uid(),
+          authorId: state.user.id,
+          author: {
+            name: state.user.name,
+            avatar: state.user.avatar,
+            avatarData: state.user.avatarData,
+            verified: true
+          },
+          type: 'achievement',
+          content: title + (desc ? '\n\n' + desc : ''),
+          skills: achieveSkills,
+          media: [],
+          achieveCategory: category || 'milestone',
+          achieveDate: date || '',
+          achieveLink: link || null,
+          likes: 0,
+          comments: 0,
+          reSparks: 0,
+          time: 'Just now'
+        };
+
+        state.sparks.unshift(newSpark);
+        closeAchievementModal();
+        renderFeed();
+        showToast('🏆 Achievement shared!', 'success');
+        saveState();
+      });
+
+      // ================================================================
+      // QUESTION MODAL
+      // ================================================================
+      let questionSkills = [];
+
+      function openQuestionModal() {
+        const modal = document.getElementById('questionModal');
+        if (modal) modal.classList.add('active');
+        document.getElementById('questionTitle').value = '';
+        document.getElementById('questionDesc').value = '';
+        document.getElementById('questionSkillsInput').value = '';
+        questionSkills = [];
+        renderQuestionSkills();
+        document.getElementById('questionTitle').focus();
+      }
+
+      function closeQuestionModal() {
+        const modal = document.getElementById('questionModal');
+        if (modal) modal.classList.remove('active');
+      }
+
+      document.getElementById('questionModalClose')?.addEventListener('click', closeQuestionModal);
+      document.getElementById('questionModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeQuestionModal();
+      });
+
+      document.getElementById('questionAddSkillBtn')?.addEventListener('click', function() {
+        const input = document.getElementById('questionSkillsInput');
+        const val = input?.value.trim();
+        if (!val) return;
+        const skills = val.split(',').map(s => s.trim()).filter(Boolean);
+        skills.forEach(s => {
+          if (!questionSkills.includes(s) && questionSkills.length < 5) {
+            questionSkills.push(s);
+          }
+        });
+        renderQuestionSkills();
+        if (input) input.value = '';
+      });
+
+      document.getElementById('questionSkillsInput')?.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('questionAddSkillBtn')?.click();
+        }
+      });
+
+      function renderQuestionSkills() {
+        const container = document.getElementById('questionSkillsChips');
+        if (!container) return;
+        container.innerHTML = questionSkills.map(s =>
+          `<span class="chip">${s} <span class="remove" data-skill="${s}">&times;</span></span>`
+        ).join('');
+        container.querySelectorAll('.chip .remove').forEach(el => {
+          el.addEventListener('click', function() {
+            const skill = this.dataset.skill;
+            questionSkills = questionSkills.filter(s => s !== skill);
+            renderQuestionSkills();
+          });
+        });
+      }
+
+      document.getElementById('questionPublishBtn')?.addEventListener('click', function() {
+        const title = document.getElementById('questionTitle')?.value.trim();
+        const desc = document.getElementById('questionDesc')?.value.trim();
+        const category = document.getElementById('questionCategory')?.value;
+
+        if (!title) {
+          showToast('Please enter a question.', 'error');
+          return;
+        }
+
+        const newSpark = {
+          id: uid(),
+          authorId: state.user.id,
+          author: {
+            name: state.user.name,
+            avatar: state.user.avatar,
+            avatarData: state.user.avatarData,
+            verified: true
+          },
+          type: 'question',
+          content: title + (desc ? '\n\n' + desc : ''),
+          skills: questionSkills,
+          media: [],
+          questionCategory: category || 'tech',
+          likes: 0,
+          comments: 0,
+          reSparks: 0,
+          time: 'Just now'
+        };
+
+        state.sparks.unshift(newSpark);
+        closeQuestionModal();
+        renderFeed();
+        showToast('❓ Question posted!', 'success');
+        saveState();
+      });
+
+      // ================================================================
+      // COMPOSER – MAIN (with redirects for 5 types)
       // ================================================================
       let selectedType = 'text';
       let uploadedFiles = [];
       let currentSkills = [];
 
       function openComposer(type) {
+        // Redirect specific types to their dedicated modals or pages
+        if (type === 'product') {
+          document.getElementById('productModal')?.classList.add('active');
+          return;
+        }
+        if (type === 'opportunity') {
+          document.getElementById('opportunityModal')?.classList.add('active');
+          return;
+        }
+        if (type === 'event') {
+          // Open product modal with Event type pre-selected
+          const modal = document.getElementById('productModal');
+          if (modal) modal.classList.add('active');
+          const typeSelect = document.getElementById('productType');
+          if (typeSelect) typeSelect.value = 'Event';
+          return;
+        }
+        if (type === 'achievement') {
+          openAchievementModal();
+          return;
+        }
+        if (type === 'question') {
+          openQuestionModal();
+          return;
+        }
+
+        // For all other types (text, photo, video, audio, pdf, project, poll, learning)
         selectedType = type || 'text';
         const modal = document.getElementById('composerModal');
         if (!modal) return;
@@ -2494,7 +2956,6 @@
             else if (type === 'audio') uploadHint.textContent = 'MP3, WAV, OGG, M4A · max 25MB';
             else if (type === 'pdf') uploadHint.textContent = 'PDF only · max 20MB';
           }
-          // Set accept attribute
           const fileInputEl = document.getElementById('composerFileInput');
           if (fileInputEl) {
             if (type === 'photo') fileInputEl.accept = 'image/*';
@@ -2506,17 +2967,14 @@
           if (uploadArea) uploadArea.style.display = 'none';
         }
 
-        // Poll options
         if (type === 'poll') {
           if (pollField) pollField.style.display = 'block';
         }
 
-        // Video link
         if (type === 'video') {
           if (videoLinkField) videoLinkField.style.display = 'block';
         }
 
-        // Load user skills
         if (state.user.skills && state.user.skills.length > 0) {
           renderSkillsChips(state.user.skills);
         }
@@ -2529,10 +2987,18 @@
         if (modal) modal.classList.remove('active');
       }
 
-      // Type button clicks
+      // Type button clicks – route to appropriate handler
       document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           const type = this.dataset.type;
+          // Close composer if it's one of the special types (they open their own modals)
+          if (['product', 'opportunity', 'event', 'achievement', 'question'].includes(type)) {
+            closeComposer();
+            // Give a small delay to allow composer to close
+            setTimeout(() => openComposer(type), 100);
+            return;
+          }
+          // For normal types, update the composer
           selectedType = type;
           document.querySelectorAll('.composer-types .type-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
@@ -2581,12 +3047,10 @@
         });
       });
 
-      // Upload area click
       document.getElementById('uploadArea')?.addEventListener('click', function() {
         document.getElementById('composerFileInput')?.click();
       });
 
-      // File input change
       document.getElementById('composerFileInput')?.addEventListener('change', function() {
         const preview = document.getElementById('mediaPreview');
         if (!preview) return;
@@ -2631,7 +3095,6 @@
         });
       });
 
-      // Add skill button
       document.getElementById('addSkillBtn')?.addEventListener('click', function() {
         const input = document.getElementById('composerSkills');
         const value = input?.value.trim();
@@ -2656,7 +3119,6 @@
         }
       });
 
-      // Preset skill chips
       document.querySelectorAll('.preset-chip').forEach(chip => {
         chip.addEventListener('click', function() {
           const skill = this.dataset.skill;
@@ -2690,7 +3152,6 @@
         });
       }
 
-      // Publish Spark
       document.getElementById('composerPublishBtn')?.addEventListener('click', function() {
         const content = document.getElementById('composerContent')?.value.trim();
         if (!content) { showToast('Please add content.', 'warning'); return; }
@@ -2701,7 +3162,6 @@
           return;
         }
 
-        // Build media array
         const media = [];
         if (uploadedFiles.length > 0) {
           uploadedFiles.forEach(file => {
@@ -2714,7 +3174,6 @@
           });
         }
 
-        // Check for video link
         if (selectedType === 'video') {
           const videoLink = document.getElementById('composerVideoLink')?.value.trim();
           if (videoLink) {
@@ -2722,7 +3181,6 @@
           }
         }
 
-        // Poll options
         let pollOptions = null;
         if (selectedType === 'poll') {
           const pollText = document.getElementById('composerPollOptions')?.value.trim();
@@ -2851,7 +3309,7 @@
       renderProfile();
       navigateTo('feed');
       window.addEventListener('beforeunload', saveState);
-      console.log('🚀 SkiloraX Spark System ready!');
+      console.log('🚀 SkiloraX Spark System ready with fixed 5 types!');
     })();
   </script>
 </body>
