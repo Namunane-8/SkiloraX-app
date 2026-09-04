@@ -385,10 +385,17 @@
         <button class="type-btn" data-type="video"><i class="fas fa-video"></i> Video</button>
         <button class="type-btn" data-type="project"><i class="fas fa-folder-open"></i> Project</button>
         <button class="type-btn" data-type="poll"><i class="fas fa-poll"></i> Poll</button>
+        <button class="type-btn" data-type="question"><i class="fas fa-question-circle"></i> Question</button>
+        <button class="type-btn" data-type="achievement"><i class="fas fa-trophy"></i> Achievement</button>
+        <button class="type-btn" data-type="opportunity"><i class="fas fa-briefcase"></i> Opportunity</button>
+        <button class="type-btn" data-type="product"><i class="fas fa-tag"></i> Product</button>
+        <button class="type-btn" data-type="event"><i class="fas fa-calendar"></i> Event</button>
+        <button class="type-btn" data-type="learning"><i class="fas fa-graduation-cap"></i> Learning</button>
       </div>
       <div class="composer-field"><label>Content</label><textarea class="form-control" id="composerContent" rows="4" placeholder="What's on your mind?"></textarea></div>
-      <div class="composer-field" id="mediaUploadField" style="display:none;"><label>Media</label><input type="file" id="composerFileInput" class="form-control" accept="image/*,video/*" /><div class="media-preview" id="mediaPreview"></div></div>
+      <div class="composer-field" id="mediaUploadField" style="display:none;"><label>Media</label><input type="file" id="composerFileInput" class="form-control" accept="image/*,video/*,audio/*,.pdf" /><div class="media-preview" id="mediaPreview"></div></div>
       <div class="composer-field"><label>Skills (comma separated)</label><input class="form-control" id="composerSkills" placeholder="e.g., React, UI Design, Python" /></div>
+      <div class="composer-field" id="pollOptionsField" style="display:none;"><label>Poll Options (one per line)</label><textarea class="form-control" id="composerPollOptions" rows="3" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea></div>
       <button class="btn btn-primary btn-block" id="composerPublishBtn"><i class="fas fa-bolt"></i> Publish Spark</button>
     </div>
   </div>
@@ -486,7 +493,7 @@
   </div>
 
   <!-- ================================================================ -->
-  <!-- JAVASCRIPT – FULLY FIXED -->
+  <!-- JAVASCRIPT – FIXED: opens on Feed instead of Profile -->
   <!-- ================================================================ -->
   <script>
     (function() {
@@ -519,7 +526,7 @@
         communities: [],
         notifications: [],
         chats: [],
-        currentPage: 'profile'
+        currentPage: 'profile'  // will be overridden
       };
 
       // ===== LOAD / SAVE =====
@@ -638,18 +645,29 @@
             } else if (m.type === 'video') {
               mediaHTML =
                 `<div class="spark-media"><video controls preload="metadata"><source src="${m.url}" type="video/mp4" /></video></div>`;
+            } else if (m.type === 'audio') {
+              mediaHTML =
+                `<div class="spark-media"><div class="media-placeholder"><i class="fas fa-music"></i><audio controls style="width:100%;"><source src="${m.url}" /></audio></div></div>`;
+            } else if (m.type === 'pdf') {
+              mediaHTML =
+                `<div class="spark-media"><div class="media-placeholder"><i class="fas fa-file-pdf"></i><p><a href="${m.url}" target="_blank">View PDF</a></p></div></div>`;
             } else {
               mediaHTML =
                 `<div class="spark-media"><div class="media-placeholder"><i class="fas fa-file"></i><p>Media attached</p></div></div>`;
             }
           }
+          // Poll display
+          let pollDisplay = '';
+          if (s.type === 'poll' && s.pollOptions && s.pollOptions.length > 0) {
+            pollDisplay = `<div style="margin-top:.5rem;font-size:.85rem;color:var(--text-secondary);"><strong>Poll:</strong> ${s.pollOptions.join(' | ')}</div>`;
+          }
           return `
             <div class="spark">
               <div class="spark-header">
                 <div class="avatar">${s.author.avatarData ? `<img src="${s.author.avatarData}" alt="avatar" />` : s.author.avatar}</div>
-                <div class="info"><div class="name">${s.author.name}</div><div class="handle">${s.time || 'Just now'}</div></div>
+                <div class="info"><div class="name">${s.author.name}</div><div class="handle"><span class="badge badge-purple" style="font-size:.6rem;">${s.type.toUpperCase()}</span> · ${s.time || 'Just now'}</div></div>
               </div>
-              <div class="spark-content"><div class="spark-text">${s.content}</div>${s.skills && s.skills.length ? `<div class="spark-skills">${s.skills.map(sk => `<span class="skill">#${sk}</span>`).join('')}</div>` : ''}${mediaHTML}</div>
+              <div class="spark-content"><div class="spark-text">${s.content}</div>${s.skills && s.skills.length ? `<div class="spark-skills">${s.skills.map(sk => `<span class="skill">#${sk}</span>`).join('')}</div>` : ''}${pollDisplay}${mediaHTML}</div>
               <div class="spark-actions">
                 <button class="action"><i class="fas fa-heart"></i> <span class="count">${s.likes || 0}</span></button>
                 <button class="action"><i class="fas fa-comment"></i> <span class="count">${s.comments || 0}</span></button>
@@ -661,7 +679,7 @@
         }).join('');
       }
 
-      // ----- SHORT (fixed – videos persist) -----
+      // ----- SHORT -----
       function renderShort() {
         const list = document.getElementById('shortVideoList');
         if (!list) return;
@@ -674,7 +692,7 @@
         ).join('');
       }
 
-      // ----- SHORT UPLOAD HANDLER -----
+      // ----- SHORT UPLOAD -----
       document.getElementById('uploadShortBtn').addEventListener('click', function() {
         document.getElementById('shortFileInput').click();
       });
@@ -684,11 +702,7 @@
         if (!file) return;
         const reader = new FileReader();
         reader.onload = function(e) {
-          const videoData = {
-            id: uid(),
-            url: e.target.result,
-            name: file.name || 'Short Spark'
-          };
+          const videoData = { id: uid(), url: e.target.result, name: file.name || 'Short Spark' };
           state.shortVideos.push(videoData);
           saveState();
           renderShort();
@@ -708,7 +722,6 @@
       function renderExperts() {
         document.getElementById('expertsGrid').innerHTML =
           `<div class="empty-state"><i class="fas fa-user-tie"></i><h3>No experts yet</h3><p>Are you an expert? Share your skills and connect with professionals.</p><button class="btn btn-primary" id="becomeExpertBtn"><i class="fas fa-plus"></i> Become an Expert</button></div>`;
-        // Re-bind expert button
         document.getElementById('becomeExpertBtn')?.addEventListener('click', openExpertModal);
       }
 
@@ -1084,7 +1097,6 @@
       // ================================================================
       function openExpertModal() {
         document.getElementById('expertModal').classList.add('active');
-        // Pre-populate from profile fields
         document.getElementById('expertTitle').value = state.user.title || '';
         document.getElementById('expertBio').value = state.user.bio || '';
         document.getElementById('expertSkills').value = state.user.skills ? state.user.skills.join(', ') : '';
@@ -1249,7 +1261,7 @@
       });
 
       // ================================================================
-      // COMPOSER
+      // COMPOSER – ALL 11 TYPES (already present)
       // ================================================================
       let selectedType = 'text';
       let uploadedFiles = [];
@@ -1263,11 +1275,37 @@
         document.getElementById('composerSkills').value = '';
         document.getElementById('composerFileInput').value = '';
         document.getElementById('mediaPreview').innerHTML = '';
+        document.getElementById('composerPollOptions').value = '';
+        document.getElementById('pollOptionsField').style.display = 'none';
         uploadedFiles = [];
+
         document.querySelectorAll('.composer-types .type-btn').forEach(btn => btn.classList.toggle('active', btn.dataset
           .type === type));
-        document.getElementById('mediaUploadField').style.display = (type === 'photo' || type === 'video') ? 'block' :
-          'none';
+        const mediaTypes = ['photo', 'video'];
+        const uploadArea = document.getElementById('uploadArea');
+        const mediaHint = document.getElementById('mediaHint');
+
+        if (mediaTypes.includes(type)) {
+          uploadArea.style.display = 'block';
+          if (type === 'photo') {
+            mediaHint.textContent = 'Up to 4 images · JPG, PNG, WEBP, GIF';
+          } else if (type === 'video') {
+            mediaHint.textContent = 'Upload a video · MP4, MOV, AVI';
+          }
+        } else {
+          uploadArea.style.display = 'none';
+          mediaHint.textContent = '';
+        }
+
+        if (type === 'poll') {
+          document.getElementById('pollOptionsField').style.display = 'block';
+        }
+
+        document.getElementById('skillsChips').innerHTML = '';
+        if (state.user.skills) {
+          renderSkillsChips(state.user.skills);
+        }
+
         document.getElementById('composerContent').focus();
       }
 
@@ -1276,21 +1314,50 @@
         if (modal) modal.classList.remove('active');
       }
 
-      document.getElementById('composerTrigger').addEventListener('click', () => openComposer('text'));
-      document.getElementById('bottomPostBtn').addEventListener('click', () => openComposer('text'));
-      document.getElementById('sidebarPostBtn').addEventListener('click', () => openComposer('text'));
       document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
-        btn.addEventListener('click', function() { openComposer(this.dataset.type); });
+        btn.addEventListener('click', function() {
+          const type = this.dataset.type;
+          selectedType = type;
+          document.querySelectorAll('.composer-types .type-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const mediaTypes = ['photo', 'video'];
+          const uploadArea = document.getElementById('uploadArea');
+          const mediaHint = document.getElementById('mediaHint');
+
+          if (mediaTypes.includes(type)) {
+            uploadArea.style.display = 'block';
+            if (type === 'photo') {
+              mediaHint.textContent = 'Up to 4 images · JPG, PNG, WEBP, GIF';
+            } else if (type === 'video') {
+              mediaHint.textContent = 'Upload a video · MP4, MOV, AVI';
+            }
+          } else {
+            uploadArea.style.display = 'none';
+            mediaHint.textContent = '';
+          }
+
+          document.getElementById('pollOptionsField').style.display = type === 'poll' ? 'block' : 'none';
+          document.getElementById('composerFileInput').value = '';
+          document.getElementById('mediaPreview').innerHTML = '';
+          uploadedFiles = [];
+        });
       });
-      document.getElementById('composerModalClose').addEventListener('click', closeComposer);
-      document.getElementById('composerModal').addEventListener('click', function(e) {
-        if (e.target === this) closeComposer();
+
+      document.getElementById('uploadArea').addEventListener('click', function() {
+        document.getElementById('composerFileInput').click();
       });
 
       document.getElementById('composerFileInput').addEventListener('change', function() {
         const preview = document.getElementById('mediaPreview');
         preview.innerHTML = '';
         const files = Array.from(this.files);
+        const maxFiles = selectedType === 'photo' ? 4 : 1;
+        if (files.length > maxFiles) {
+          showToast(`You can upload up to ${maxFiles} files.`, 'error');
+          this.value = '';
+          return;
+        }
+        uploadedFiles = files;
         files.forEach((file, i) => {
           const reader = new FileReader();
           reader.onload = function(e) {
@@ -1298,13 +1365,13 @@
             div.className = 'preview-item';
             if (file.type.startsWith('image/')) {
               div.innerHTML =
-                `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" /><button class="remove" data-index="${i}">&times;</button>`;
+                `<img src="${e.target.result}" alt="Preview" /><button class="remove" data-index="${i}">&times;</button>`;
             } else if (file.type.startsWith('video/')) {
               div.innerHTML =
                 `<video src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></video><button class="remove" data-index="${i}">&times;</button>`;
             } else {
               div.innerHTML =
-                `<i class="fas fa-file"></i><span style="font-size:.6rem;">${file.name}</span><button class="remove" data-index="${i}">&times;</button>`;
+                `<i class="fas fa-file"></i><span style="font-size:.6rem;margin-top:.2rem;">${file.name}</span><button class="remove" data-index="${i}">&times;</button>`;
             }
             preview.appendChild(div);
             div.querySelector('.remove')?.addEventListener('click', function() {
@@ -1314,21 +1381,118 @@
             });
           };
           reader.readAsDataURL(file);
-          uploadedFiles.push(file);
         });
+      });
+
+      document.getElementById('addSkillBtn').addEventListener('click', function() {
+        const input = document.getElementById('composerSkills');
+        const value = input.value.trim();
+        if (!value) return;
+        const skills = value.split(',').map(s => s.trim()).filter(Boolean);
+        const currentSkills = state.user.skills || [];
+        skills.forEach(s => {
+          if (!currentSkills.includes(s) && currentSkills.length < 5) {
+            currentSkills.push(s);
+          }
+        });
+        state.user.skills = currentSkills;
+        renderSkillsChips(currentSkills);
+        input.value = '';
+        saveState();
+      });
+
+      document.getElementById('composerSkills').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('addSkillBtn').click();
+        }
+      });
+
+      document.querySelectorAll('.preset-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+          const skill = this.dataset.skill;
+          const currentSkills = state.user.skills || [];
+          if (!currentSkills.includes(skill) && currentSkills.length < 5) {
+            currentSkills.push(skill);
+            state.user.skills = currentSkills;
+            renderSkillsChips(currentSkills);
+            saveState();
+          } else if (currentSkills.includes(skill)) {
+            showToast('Skill already added.', 'warning');
+          } else {
+            showToast('Maximum 5 skills.', 'warning');
+          }
+        });
+      });
+
+      function renderSkillsChips(skills) {
+        const container = document.getElementById('skillsChips');
+        if (!container) return;
+        container.innerHTML = skills.map(s =>
+          `<span class="chip">${s} <span class="remove" data-skill="${s}">&times;</span></span>`
+        ).join('');
+        container.querySelectorAll('.chip .remove').forEach(el => {
+          el.addEventListener('click', function() {
+            const skill = this.dataset.skill;
+            state.user.skills = state.user.skills.filter(s => s !== skill);
+            renderSkillsChips(state.user.skills);
+            saveState();
+          });
+        });
+      }
+
+      document.getElementById('botSuggestBtn').addEventListener('click', function() {
+        const content = document.getElementById('composerContent').value.trim();
+        if (!content) {
+          showToast('Write some content first.', 'warning');
+          return;
+        }
+        const words = content.split(' ');
+        const suggestions = words
+          .filter(w => w.length > 4)
+          .slice(0, 3)
+          .map(w => w.replace(/[^a-zA-Z]/g, ''))
+          .filter(Boolean);
+        if (suggestions.length > 0) {
+          const currentSkills = state.user.skills || [];
+          suggestions.forEach(s => {
+            if (!currentSkills.includes(s) && currentSkills.length < 5) {
+              currentSkills.push(s);
+            }
+          });
+          state.user.skills = currentSkills;
+          renderSkillsChips(currentSkills);
+          saveState();
+          showToast('Skills suggested!', 'success');
+        } else {
+          showToast('Write more content for better suggestions.', 'info');
+        }
       });
 
       document.getElementById('composerPublishBtn').addEventListener('click', function() {
         const content = document.getElementById('composerContent').value.trim();
         if (!content) { showToast('Please add content.', 'warning'); return; }
-        const skills = document.getElementById('composerSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+        const skills = state.user.skills || [];
+        if (skills.length > 5) {
+          showToast('Maximum 5 skills allowed.', 'error');
+          return;
+        }
         const media = [];
         if (uploadedFiles.length > 0) {
-          const file = uploadedFiles[0];
-          let mediaType = 'file';
-          if (file.type.startsWith('image/')) mediaType = 'image';
-          else if (file.type.startsWith('video/')) mediaType = 'video';
-          media.push({ type: mediaType, url: URL.createObjectURL(file) });
+          uploadedFiles.forEach(file => {
+            let mediaType = 'file';
+            if (file.type.startsWith('image/')) mediaType = 'image';
+            else if (file.type.startsWith('video/')) mediaType = 'video';
+            else mediaType = 'file';
+            media.push({ type: mediaType, url: URL.createObjectURL(file) });
+          });
+        }
+        let pollOptions = null;
+        if (selectedType === 'poll') {
+          const pollText = document.getElementById('composerPollOptions').value.trim();
+          if (pollText) {
+            pollOptions = pollText.split('\n').map(s => s.trim()).filter(Boolean);
+          }
         }
         const newSpark = {
           id: uid(),
@@ -1339,12 +1503,15 @@
           content: content,
           skills: skills,
           media: media,
+          pollOptions: pollOptions,
           likes: 0,
           comments: 0,
           reSparks: 0,
           time: 'Just now'
         };
         state.sparks.unshift(newSpark);
+        state.user.skills = [];
+        renderSkillsChips([]);
         renderFeed();
         closeComposer();
         showToast('Spark published! 🚀', 'success');
@@ -1374,6 +1541,15 @@
           e.preventDefault();
           navigateTo(this.dataset.page);
         });
+      });
+
+      document.getElementById('composerTrigger').addEventListener('click', () => openComposer('text'));
+      document.getElementById('bottomPostBtn').addEventListener('click', () => openComposer('text'));
+      document.getElementById('sidebarPostBtn').addEventListener('click', () => openComposer('text'));
+
+      document.getElementById('composerModalClose').addEventListener('click', closeComposer);
+      document.getElementById('composerModal').addEventListener('click', function(e) {
+        if (e.target === this) closeComposer();
       });
 
       // ================================================================
@@ -1415,7 +1591,7 @@
       });
 
       // ================================================================
-      // INIT
+      // INIT – FIXED: opens on Feed
       // ================================================================
       if (!loadState()) {
         state.user.name = 'SkiloraX User';
@@ -1424,10 +1600,12 @@
         state.user.location = 'Nairobi, Kenya';
         saveState();
       }
-      renderProfile();
-      navigateTo('profile');
+      // Override saved page to ensure feed is first
+      state.currentPage = 'feed';
+      renderProfile(); // needed to set profile fields
+      navigateTo('feed'); // open feed
       window.addEventListener('beforeunload', saveState);
-      console.log('🚀 SkiloraX ready – all links working, videos persist!');
+      console.log('🚀 SkiloraX ready – opens on Feed!');
     })();
   </script>
 </body>
