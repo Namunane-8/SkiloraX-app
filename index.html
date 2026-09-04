@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>SkiloraX — Dashboard</title>
+  <title>SkiloraX — Show Your Skills. Get Discovered.</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ============================================================
-       SKILORAX — INTERNAL DASHBOARD
+       SKILORAX — PRODUCTION PLATFORM
+       Built in Africa. Designed for the World.
        ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --gold: #fbbf24; --gold-dark: #f59e0b; --gold-light: #fef3c7;
       --gold-gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
@@ -27,11 +27,8 @@
       --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 1.875rem;
       --transition: 0.2s ease; --bottom-nav-height: 64px;
     }
-
     html { scroll-behavior: smooth; }
     body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
-
-    /* ----- UTILITY ----- */
     .hidden { display: none !important; }
     .text-gradient { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .flex-center { display: flex; align-items: center; justify-content: center; }
@@ -43,8 +40,6 @@
     .mb-2 { margin-bottom: 0.5rem; }
     .mb-4 { margin-bottom: 1rem; }
     .w-full { width: 100%; }
-
-    /* ----- BUTTONS ----- */
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.2rem; font-family: var(--font); font-weight: 600; font-size: var(--text-sm); border: none; border-radius: var(--radius); cursor: pointer; transition: var(--transition); line-height: 1; text-decoration: none; }
     .btn-primary { background: var(--gold-gradient); color: var(--text); box-shadow: 0 4px 14px rgba(251,191,36,0.3); }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(251,191,36,0.4); }
@@ -62,42 +57,31 @@
     .btn-lg { padding: 0.8rem 1.8rem; font-size: var(--text-base); }
     .btn-block { width: 100%; justify-content: center; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* ----- BADGE ----- */
     .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.15rem 0.6rem; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; line-height: 1.5; white-space: nowrap; }
     .badge-gold { background: var(--gold-light); color: var(--gold-dark); }
     .badge-green { background: #d1fae5; color: #065f46; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-blue { background: #dbeafe; color: #1e40af; }
     .badge-purple { background: var(--purple-light); color: var(--purple); }
-
-    /* ----- AVATAR ----- */
     .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--text-lg); background: var(--gold-light); color: var(--gold-dark); flex-shrink: 0; overflow: hidden; }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .avatar-sm { width: 32px; height: 32px; font-size: var(--text-sm); }
     .avatar-lg { width: 64px; height: 64px; font-size: var(--text-2xl); }
     .avatar-xl { width: 88px; height: 88px; font-size: var(--text-3xl); }
-
-    /* ----- CARD ----- */
     .card { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; border: 1px solid var(--border); transition: var(--transition); }
     .card:hover { box-shadow: var(--shadow-lg); }
-
-    /* ----- FORM ----- */
     .form-group { margin-bottom: 1rem; }
     .form-label { display: block; font-weight: 600; font-size: var(--text-sm); margin-bottom: 0.25rem; color: var(--text-secondary); }
     .form-control { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: var(--text-sm); font-family: var(--font); transition: var(--transition); background: var(--surface); color: var(--text); }
     .form-control:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(251,191,36,0.15); }
     .form-control::placeholder { color: var(--text-muted); }
     textarea.form-control { resize: vertical; min-height: 80px; }
-
-    /* ----- APP SHELL ----- */
+    select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
     .app { display: flex; min-height: 100vh; }
-
-    /* ----- SIDEBAR ----- */
     .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 1rem 0.75rem; position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; z-index: 40; transition: transform 0.3s ease; overflow-y: auto; }
     .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem 1.25rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
     .sidebar-brand .icon { width: 38px; height: 38px; background: var(--gold-gradient); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text); font-size: 1rem; }
-    .sidebar-brand .name { font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px; }
+    .sidebar-brand .name { font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px; color: var(--text); }
     .sidebar-brand .name span { color: var(--gold-dark); }
     .sidebar-nav { flex: 1; }
     .sidebar-nav .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); padding: 0.75rem 0.75rem 0.4rem; font-weight: 600; }
@@ -109,12 +93,10 @@
     .sidebar-footer { padding-top: 0.75rem; border-top: 1px solid var(--border); }
     .sidebar-footer .nav-link { color: var(--text-muted); }
     .sidebar-footer .nav-link:hover { color: #ef4444; background: #fef2f2; }
-    .sidebar-post-btn { margin-top: 1rem; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    .sidebar-post-btn { margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
     .sidebar-post-btn .btn { width: 100%; }
-
     .sidebar-toggle { display: none; position: fixed; top: 0.75rem; left: 0.75rem; z-index: 50; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 0.7rem; cursor: pointer; font-size: 1.2rem; box-shadow: var(--shadow); }
     .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 35; }
-
     .main { margin-left: 260px; flex: 1; padding: 1.5rem 2rem 3rem; min-height: 100vh; }
     .page { animation: fadeUp 0.3s ease; }
     .page.hidden { display: none; }
@@ -122,14 +104,10 @@
     .page-header { margin-bottom: 1.5rem; }
     .page-header h1 { font-size: var(--text-2xl); font-weight: 800; letter-spacing: -0.5px; }
     .page-header p { color: var(--text-secondary); font-size: var(--text-sm); margin-top: 0.1rem; }
-
-    /* ----- COMPOSER TRIGGER ----- */
     .composer-trigger { background: var(--surface); border-radius: var(--radius-lg); padding: 0.75rem 1.25rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: var(--transition); margin-bottom: 1.5rem; }
     .composer-trigger:hover { border-color: var(--gold); box-shadow: var(--shadow); }
     .composer-trigger .input { flex: 1; border: none; outline: none; font-family: var(--font); font-size: var(--text-base); padding: 0.4rem 0; background: transparent; color: var(--text); cursor: pointer; }
     .composer-trigger .input::placeholder { color: var(--text-muted); }
-
-    /* ----- MODAL ----- */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.active { display: flex; }
     .modal-overlay .modal-content { background: var(--surface); border-radius: var(--radius-lg); max-width: 720px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 1.5rem; position: relative; animation: modalIn 0.25s ease; }
@@ -144,8 +122,6 @@
     .composer-field { margin-bottom: 0.75rem; }
     .composer-field label { font-weight: 600; font-size: var(--text-sm); display: block; margin-bottom: 0.2rem; color: var(--text-secondary); }
     .composer-field .form-control { font-size: var(--text-base); }
-
-    /* ----- SPARK FEED ----- */
     .feed { max-width: 720px; margin: 0 auto; }
     .spark { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; border: 1px solid var(--border); margin-bottom: 1rem; transition: var(--transition); }
     .spark:hover { box-shadow: var(--shadow-lg); }
@@ -172,16 +148,12 @@
     .spark-actions .action.liked { color: #ef4444; }
     .spark-actions .action i { font-size: 1.1rem; }
     .spark-actions .action .count { font-size: 0.75rem; }
-
-    /* ----- DISCOVER ----- */
     .discover-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
     .discover-card { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; border: 1px solid var(--border); text-align: center; transition: var(--transition); }
     .discover-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
     .discover-card .avatar { margin: 0 auto 0.5rem; }
     .discover-card .name { font-weight: 700; }
     .discover-card .title { font-size: var(--text-sm); color: var(--text-secondary); }
-
-    /* ----- EXPERTS ----- */
     .experts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1.25rem; }
     .expert-card .top { display: flex; align-items: flex-start; gap: 0.75rem; }
     .expert-card .top .info h4 { font-weight: 700; }
@@ -189,22 +161,21 @@
     .expert-card .skills { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0.5rem 0; }
     .expert-card .footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.75rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 0.5rem; }
     .expert-card .footer .price { font-weight: 700; font-size: var(--text-lg); }
-
-    /* ----- MARKET ----- */
-    .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1.25rem; }
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1.25rem; }
     .product-card .image { font-size: 2.5rem; text-align: center; padding: 1.5rem 0; background: var(--bg); border-radius: var(--radius); margin-bottom: 0.5rem; }
     .product-card .name { font-weight: 700; }
-    .product-card .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 1px solid var(--border); margin-top: 0.5rem; }
+    .product-card .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 1px solid var(--border); margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
     .product-card .footer .price { font-weight: 700; font-size: var(--text-lg); }
-
-    /* ----- NOTIFICATIONS ----- */
+    .product-card .footer .currency { font-size: var(--text-sm); color: var(--text-muted); }
     .notif-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius); border-bottom: 1px solid var(--border); }
     .notif-item:last-child { border-bottom: none; }
     .notif-item.unread { background: var(--gold-light); margin: 0 -0.75rem; padding: 0.6rem 0.75rem; }
     .notif-item i { font-size: 1.2rem; color: var(--gold-dark); width: 24px; text-align: center; }
-
-    /* ----- PROFILE ----- */
     .profile-header { display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem; background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .profile-header .avatar-upload { position: relative; cursor: pointer; }
+    .profile-header .avatar-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .profile-header .avatar-upload .avatar { width: 88px; height: 88px; font-size: var(--text-3xl); border: 3px solid var(--gold); }
+    .profile-header .avatar-upload .edit-overlay { position: absolute; bottom: 0; right: 0; background: var(--gold); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text); border: 2px solid var(--surface); }
     .profile-header .info h2 { font-size: var(--text-2xl); font-weight: 800; }
     .profile-header .info .title { color: var(--text-secondary); }
     .profile-header .info .location { font-size: var(--text-sm); color: var(--text-muted); }
@@ -214,27 +185,21 @@
     .profile-stats .stat .num { font-size: var(--text-xl); font-weight: 800; }
     .profile-stats .stat .label { font-size: var(--text-sm); color: var(--text-secondary); }
     .profile-skills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-
-    /* ----- CHAT ----- */
     .chat-list .chat-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius); cursor: pointer; transition: var(--transition); }
     .chat-list .chat-item:hover { background: var(--bg); }
     .chat-list .chat-item .info { flex: 1; }
     .chat-list .chat-item .info .name { font-weight: 600; }
     .chat-list .chat-item .info .last { font-size: var(--text-sm); color: var(--text-secondary); }
     .chat-list .chat-item .meta { text-align: right; font-size: 0.7rem; color: var(--text-muted); }
-
-    /* ----- BOTTOM NAV ----- */
     .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--surface); border-top: 1px solid var(--border); z-index: 45; justify-content: space-around; align-items: center; padding: 0 0.5rem; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem; color: var(--text-muted); font-size: 0.6rem; font-weight: 500; cursor: pointer; padding: 0.25rem 0.5rem; min-width: 50px; transition: var(--transition); background: none; border: none; font-family: var(--font); position: relative; }
-    .bottom-nav .nav-item i { font-size: 1.4rem; transition: var(--transition); }
+    .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem; color: var(--text-muted); font-size: 0.55rem; font-weight: 500; cursor: pointer; padding: 0.2rem 0.4rem; min-width: 44px; transition: var(--transition); background: none; border: none; font-family: var(--font); position: relative; }
+    .bottom-nav .nav-item i { font-size: 1.2rem; transition: var(--transition); }
     .bottom-nav .nav-item.active { color: var(--gold-dark); }
     .bottom-nav .nav-item.active i { color: var(--gold-dark); }
-    .bottom-nav .nav-item .badge { position: absolute; top: 0; right: 0; font-size: 0.55rem; padding: 0.05rem 0.4rem; }
-    .bottom-nav .nav-item.post-btn { background: var(--gold-gradient); color: var(--text); border-radius: 50%; width: 52px; height: 52px; margin-top: -12px; box-shadow: 0 4px 14px rgba(251,191,36,0.4); font-size: 1.8rem; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: var(--transition); }
+    .bottom-nav .nav-item .badge { position: absolute; top: 0; right: 0; font-size: 0.5rem; padding: 0.05rem 0.35rem; }
+    .bottom-nav .nav-item.post-btn { background: var(--gold-gradient); color: var(--text); border-radius: 50%; width: 48px; height: 48px; margin-top: -8px; box-shadow: 0 4px 14px rgba(251,191,36,0.4); font-size: 1.6rem; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: var(--transition); }
     .bottom-nav .nav-item.post-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(251,191,36,0.5); }
-    .bottom-nav .nav-item.post-btn i { font-size: 1.8rem; color: var(--text); line-height: 1; }
-
-    /* ----- TOAST ----- */
+    .bottom-nav .nav-item.post-btn i { font-size: 1.6rem; color: var(--text); line-height: 1; }
     .toast-container { position: fixed; bottom: calc(var(--bottom-nav-height) + 1rem); right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; max-width: 380px; width: 100%; }
     .toast { padding: 0.75rem 1rem; background: var(--text); color: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-xl); border-left: 4px solid var(--gold); font-weight: 500; font-size: var(--text-sm); display: flex; align-items: center; gap: 0.6rem; animation: slideUp 0.3s ease forwards; transform: translateY(120%); }
     .toast.show { transform: translateY(0); }
@@ -242,8 +207,12 @@
     .toast-success { border-left-color: #10b981; }
     .toast-error { border-left-color: #ef4444; }
     .toast i { font-size: 1.2rem; }
-
-    /* ----- RESPONSIVE ----- */
+    .community-card, .opportunity-card { background: var(--surface); border-radius: var(--radius-lg); padding: 1.25rem; border: 1px solid var(--border); transition: var(--transition); }
+    .community-card:hover, .opportunity-card:hover { box-shadow: var(--shadow-lg); }
+    .community-card .header, .opportunity-card .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+    .community-card .header h3, .opportunity-card .header h3 { font-weight: 700; font-size: var(--text-lg); }
+    .community-card .meta, .opportunity-card .meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0.25rem 0; }
+    .community-card .actions, .opportunity-card .actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
     @media (max-width: 1024px) { .main { padding: 1.25rem; } }
     @media (max-width: 768px) {
       .sidebar-toggle { display: block; }
@@ -254,7 +223,7 @@
       .bottom-nav { display: flex; }
       .toast-container { bottom: calc(var(--bottom-nav-height) + 1rem); right: 1rem; left: 1rem; max-width: 100%; }
       .profile-header { flex-direction: column; text-align: center; }
-      .profile-header .actions { margin-left: 0; }
+      .profile-header .actions { margin-left: 0; justify-content: center; }
       .profile-stats { grid-template-columns: repeat(2, 1fr); }
       .discover-grid, .experts-grid, .market-grid { grid-template-columns: 1fr 1fr; }
       .composer-types { grid-template-columns: repeat(auto-fill, minmax(70px,1fr)); }
@@ -263,18 +232,20 @@
       .modal-overlay .modal-content { margin: 0.5rem; padding: 1rem; max-height: 90vh; }
       .spark-actions .action { padding: 0.2rem 0.5rem; font-size: 0.75rem; }
       .sidebar-post-btn { display: none; }
+      .bottom-nav .nav-item { font-size: 0.5rem; min-width: 36px; }
+      .bottom-nav .nav-item i { font-size: 1rem; }
+      .bottom-nav .nav-item.post-btn { width: 40px; height: 40px; margin-top: -6px; font-size: 1.2rem; }
+      .bottom-nav .nav-item.post-btn i { font-size: 1.2rem; }
     }
     @media (max-width: 480px) {
       .discover-grid, .experts-grid, .market-grid { grid-template-columns: 1fr; }
       .profile-stats { grid-template-columns: 1fr 1fr; }
       .composer-types { grid-template-columns: repeat(4, 1fr); }
       .modal-overlay .modal-content { padding: 0.75rem; }
-      .bottom-nav .nav-item i { font-size: 1.2rem; }
-      .bottom-nav .nav-item { min-width: 40px; font-size: 0.5rem; }
-      .bottom-nav .nav-item.post-btn { width: 44px; height: 44px; margin-top: -8px; font-size: 1.4rem; }
-      .bottom-nav .nav-item.post-btn i { font-size: 1.4rem; }
+      .profile-header .avatar-upload .avatar { width: 64px; height: 64px; font-size: var(--text-2xl); }
     }
     *:focus-visible { outline: 3px solid #fbbf24; outline-offset: 2px; }
+    .currency-badge { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 4px; font-size: 0.6rem; font-weight: 600; background: var(--gold-light); color: var(--gold-dark); }
   </style>
 </head>
 <body>
@@ -291,13 +262,16 @@
       <button class="nav-item active" data-page="feed"><i class="fas fa-home"></i><span>Feed</span></button>
       <button class="nav-item" data-page="explore"><i class="fas fa-compass"></i><span>Explore</span></button>
       <button class="nav-item post-btn" id="bottomPostBtn"><i class="fas fa-plus"></i></button>
-      <button class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Alerts</span><span class="badge badge-red" style="position:absolute;top:0;right:0;">5</span></button>
+      <button class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Alerts</span><span class="badge badge-red" style="position:absolute;top:0;right:0;">0</span></button>
       <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Me</span></button>
     </nav>
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand"><div class="icon">SK</div><div class="name">Skilora<span>X</span></div></div>
+      <div class="sidebar-brand">
+        <div class="icon">SK</div>
+        <div class="name">Skilora<span>X</span></div>
+      </div>
       <nav class="sidebar-nav">
         <div class="label">Main</div>
         <a class="nav-link active" data-page="feed"><i class="fas fa-home"></i> Feed</a>
@@ -306,19 +280,18 @@
         <a class="nav-link" data-page="experts"><i class="fas fa-user-tie"></i> Experts</a>
         <a class="nav-link" data-page="market"><i class="fas fa-store"></i> Market</a>
         <div class="label">Social</div>
-        <a class="nav-link" data-page="chat"><i class="fas fa-comments"></i> Messages <span class="badge badge-gold">3</span></a>
-        <a class="nav-link" data-page="notifications"><i class="fas fa-bell"></i> Notifications <span class="badge badge-red">5</span></a>
+        <a class="nav-link" data-page="chat"><i class="fas fa-comments"></i> Messages <span class="badge badge-gold">0</span></a>
+        <a class="nav-link" data-page="notifications"><i class="fas fa-bell"></i> Notifications <span class="badge badge-red">0</span></a>
         <div class="label">Professional</div>
         <a class="nav-link" data-page="profile"><i class="fas fa-user"></i> Profile</a>
         <a class="nav-link" data-page="opportunities"><i class="fas fa-briefcase"></i> Opportunities</a>
         <a class="nav-link" data-page="communities"><i class="fas fa-users"></i> Communities</a>
-      </nav>
-      <div class="sidebar-footer">
+        <div class="label">Settings</div>
         <a class="nav-link" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
         <a class="nav-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
-      </div>
+      </nav>
       <div class="sidebar-post-btn">
-        <button class="btn btn-primary" id="sidebarPostBtn"><i class="fas fa-plus"></i> Post</button>
+        <button class="btn btn-primary" id="sidebarPostBtn"><i class="fas fa-plus"></i> Create Spark</button>
       </div>
     </aside>
 
@@ -329,7 +302,7 @@
       <section id="page-feed" class="page">
         <div class="feed">
           <div class="composer-trigger" id="composerTrigger">
-            <div class="avatar user-avatar">AJ</div>
+            <div class="avatar user-avatar">SK</div>
             <div class="input" placeholder="What do you want to Spark?">What do you want to Spark?</div>
             <div style="color:var(--text-muted); font-size:1.2rem;"><i class="fas fa-bolt"></i></div>
           </div>
@@ -339,8 +312,17 @@
 
       <!-- ===== PAGE: SHORT ===== -->
       <section id="page-short" class="page hidden">
-        <div class="page-header"><h1>Short <span class="text-gradient">Sparks</span></h1><p>Discover skills and creators in vertical video.</p></div>
-        <div id="shortFeedContainer" style="text-align:center; padding:2rem; color:var(--text-muted);">🎬 Short Sparks coming soon — upload a vertical video!</div>
+        <div class="page-header"><h1>Short <span class="text-gradient">Sparks</span></h1><p>Upload a vertical video to share your skills.</p></div>
+        <div id="shortFeedContainer" style="text-align:center; padding:2rem;">
+          <div style="background:var(--surface); border:2px dashed var(--border); border-radius:var(--radius-lg); padding:3rem 1rem; max-width:400px; margin:0 auto;">
+            <i class="fas fa-play-circle" style="font-size:4rem; color:var(--gold);"></i>
+            <h3 style="margin-top:1rem;">Upload a Short Spark</h3>
+            <p style="color:var(--text-secondary); margin-bottom:1.5rem;">Share a vertical video (9:16) – tutorials, tips, or moments.</p>
+            <button class="btn btn-primary" id="uploadShortBtn"><i class="fas fa-upload"></i> Upload Video</button>
+            <input type="file" id="shortFileInput" accept="video/*" style="display:none;" />
+          </div>
+          <div id="shortVideoList" style="margin-top:2rem; display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:1rem;"></div>
+        </div>
       </section>
 
       <!-- ===== PAGE: EXPLORE ===== -->
@@ -355,36 +337,51 @@
 
       <!-- ===== PAGE: EXPERTS ===== -->
       <section id="page-experts" class="page hidden">
-        <div class="page-header"><h1>Find <span class="text-gradient">Experts</span></h1><p>Book sessions with top professionals.</p></div>
-        <div class="experts-grid" id="expertsGrid"></div>
+        <div class="page-header"><h1>Find <span class="text-gradient">Experts</span></h1><p>Connect with professionals and view their work.</p></div>
+        <div id="expertsGrid" class="experts-grid"></div>
       </section>
 
       <!-- ===== PAGE: MARKET ===== -->
       <section id="page-market" class="page hidden">
-        <div class="page-header"><h1>Marketplace</h1><p>Digital products, services, and courses.</p></div>
+        <div class="page-header"><h1>Marketplace</h1><p>Buy and sell digital products, services, and courses.</p></div>
+        <button class="btn btn-primary" style="margin-bottom:1rem;" id="showProductModal"><i class="fas fa-plus"></i> List a Product</button>
         <div class="market-grid" id="marketGrid"></div>
       </section>
 
       <!-- ===== PAGE: CHAT ===== -->
       <section id="page-chat" class="page hidden">
         <div class="page-header"><h1>Messages</h1><p>Connect with professionals.</p></div>
-        <div class="card chat-list" id="chatList"></div>
+        <div class="card chat-list" id="chatList">
+          <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+            <i class="fas fa-comments" style="font-size:2rem;"></i>
+            <p style="margin-top:0.5rem;">No conversations yet. Start a chat from a profile.</p>
+          </div>
+        </div>
       </section>
 
       <!-- ===== PAGE: NOTIFICATIONS ===== -->
       <section id="page-notifications" class="page hidden">
         <div class="page-header"><h1>Notifications</h1><p>Stay updated with your activity.</p></div>
-        <div class="card" id="notificationsContainer"></div>
+        <div class="card" id="notificationsContainer">
+          <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+            <i class="fas fa-bell" style="font-size:2rem;"></i>
+            <p style="margin-top:0.5rem;">No notifications yet.</p>
+          </div>
+        </div>
       </section>
 
       <!-- ===== PAGE: PROFILE ===== -->
       <section id="page-profile" class="page hidden">
         <div class="page-header"><h1>Your <span class="text-gradient">Profile</span></h1><p>Showcase your skills, portfolio, and professional identity.</p></div>
         <div class="profile-header">
-          <div class="avatar avatar-xl user-avatar">AJ</div>
+          <div class="avatar-upload">
+            <div class="avatar avatar-xl user-avatar" id="profileAvatarDisplay">SK</div>
+            <input type="file" id="avatarUpload" accept="image/*" />
+            <div class="edit-overlay"><i class="fas fa-camera"></i></div>
+          </div>
           <div class="info">
-            <h2 id="profileName">Alex Johnson</h2>
-            <div class="title" id="profileTitle">Senior Software Engineer</div>
+            <h2 id="profileName">SkiloraX User</h2>
+            <div class="title" id="profileTitle">Professional</div>
             <div class="location"><i class="fas fa-map-pin"></i> <span id="profileLocation">Nairobi, Kenya</span></div>
           </div>
           <div class="actions">
@@ -393,25 +390,27 @@
           </div>
         </div>
         <div class="profile-stats">
-          <div class="stat"><div class="num" id="statEndorsements">42</div><div class="label">Endorsements</div></div>
-          <div class="stat"><div class="num" id="statConnections">156</div><div class="label">Connections</div></div>
-          <div class="stat"><div class="num" id="statFollowers">89</div><div class="label">Followers</div></div>
-          <div class="stat"><div class="num" id="statFollowing">124</div><div class="label">Following</div></div>
+          <div class="stat"><div class="num" id="statEndorsements">0</div><div class="label">Endorsements</div></div>
+          <div class="stat"><div class="num" id="statConnections">0</div><div class="label">Connections</div></div>
+          <div class="stat"><div class="num" id="statFollowers">0</div><div class="label">Followers</div></div>
+          <div class="stat"><div class="num" id="statFollowing">0</div><div class="label">Following</div></div>
         </div>
-        <div class="card" style="margin-bottom:1.25rem;"><h4 style="margin-bottom:0.5rem;">About</h4><p id="profileBio" style="color:var(--text-secondary);">Full-stack developer passionate about building great products that make a difference.</p></div>
+        <div class="card" style="margin-bottom:1.25rem;"><h4 style="margin-bottom:0.5rem;">About</h4><p id="profileBio" style="color:var(--text-secondary);">No bio yet. Tell us about yourself!</p></div>
         <div class="card" style="margin-bottom:1.25rem;"><h4 style="margin-bottom:0.5rem;">Skills</h4><div class="profile-skills" id="profileSkills"></div></div>
-        <div class="card"><h4 style="margin-bottom:0.5rem;">Spark Series</h4><div id="profileSeries" style="color:var(--text-secondary); font-size:var(--text-sm);"><p><i class="fas fa-layer-group"></i> No series yet. Create a series from your Sparks.</p></div></div>
+        <div class="card"><h4 style="margin-bottom:0.5rem;">Spark Series</h4><div id="profileSeries" style="color:var(--text-secondary); font-size:var(--text-sm);"><p><i class="fas fa-layer-group"></i> No series yet.</p></div></div>
       </section>
 
       <!-- ===== PAGE: OPPORTUNITIES ===== -->
       <section id="page-opportunities" class="page hidden">
-        <div class="page-header"><h1>Opportunities</h1><p>Jobs, freelance, and collaborations matched to your skills.</p></div>
-        <div class="experts-grid" id="opportunitiesGrid"></div>
+        <div class="page-header"><h1>Opportunities</h1><p>Find jobs, freelance work, and collaborations.</p></div>
+        <button class="btn btn-primary" style="margin-bottom:1rem;" id="showOpportunityModal"><i class="fas fa-plus"></i> Post an Opportunity</button>
+        <div id="opportunitiesGrid" class="experts-grid"></div>
       </section>
 
       <!-- ===== PAGE: COMMUNITIES ===== -->
       <section id="page-communities" class="page hidden">
-        <div class="page-header"><h1>Communities</h1><p>Join professional groups and skill-based communities.</p></div>
+        <div class="page-header"><h1>Communities</h1><p>Join or create professional groups and skill-based communities.</p></div>
+        <button class="btn btn-primary" style="margin-bottom:1rem;" id="showCommunityModal"><i class="fas fa-plus"></i> Create Community</button>
         <div class="discover-grid" id="communitiesGrid"></div>
       </section>
 
@@ -419,9 +418,9 @@
       <section id="page-settings" class="page hidden">
         <div class="page-header"><h1>Settings</h1><p>Manage your account and preferences.</p></div>
         <div class="card" style="max-width:600px;">
-          <div class="form-group"><label class="form-label">Display Name</label><input class="form-control" id="settingsName" value="Alex Johnson" /></div>
-          <div class="form-group"><label class="form-label">Username</label><input class="form-control" id="settingsUsername" value="alexj" /></div>
-          <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="settingsEmail" value="alex@example.com" type="email" /></div>
+          <div class="form-group"><label class="form-label">Display Name</label><input class="form-control" id="settingsName" value="SkiloraX User" /></div>
+          <div class="form-group"><label class="form-label">Username</label><input class="form-control" id="settingsUsername" value="skilorax_user" /></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="settingsEmail" value="user@skilorax.com" type="email" /></div>
           <button class="btn btn-primary" id="settingsSave"><i class="fas fa-save"></i> Save Settings</button>
         </div>
       </section>
@@ -455,34 +454,158 @@
     </div>
   </div>
 
+  <!-- ===== PRODUCT MODAL (Multi-Currency) ===== -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-content">
+      <button class="close" id="productModalClose">&times;</button>
+      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-tag" style="color:var(--gold);"></i> List a Product</h3>
+      <div class="form-group">
+        <label class="form-label">Product Name</label>
+        <input class="form-control" id="productName" placeholder="e.g., React Course" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="productDesc" rows="3" placeholder="What is this product?"></textarea>
+      </div>
+      <div class="form-group" style="display:grid; grid-template-columns:2fr 1fr; gap:0.75rem;">
+        <div>
+          <label class="form-label">Price</label>
+          <input class="form-control" id="productPrice" type="number" placeholder="49" />
+        </div>
+        <div>
+          <label class="form-label">Currency</label>
+          <select class="form-control" id="productCurrency">
+            <option value="USD">USD ($)</option>
+            <option value="KES">KES (KSh)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="NGN">NGN (₦)</option>
+            <option value="ZAR">ZAR (R)</option>
+            <option value="GHS">GHS (₵)</option>
+            <option value="TZS">TZS (TSh)</option>
+            <option value="UGX">UGX (USh)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-control" id="productType">
+          <option value="Digital">Digital</option>
+          <option value="Physical">Physical</option>
+          <option value="Service">Service</option>
+          <option value="Event">Event</option>
+          <option value="Course">Course</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" id="productPublishBtn"><i class="fas fa-plus"></i> List Product</button>
+    </div>
+  </div>
+
+  <!-- ===== OPPORTUNITY MODAL ===== -->
+  <div class="modal-overlay" id="opportunityModal">
+    <div class="modal-content">
+      <button class="close" id="opportunityModalClose">&times;</button>
+      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-briefcase" style="color:var(--gold);"></i> Post an Opportunity</h3>
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input class="form-control" id="oppTitle" placeholder="e.g., Senior React Developer" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company / Organization</label>
+        <input class="form-control" id="oppCompany" placeholder="e.g., TechCorp" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="oppDesc" rows="3" placeholder="Describe the opportunity..."></textarea>
+      </div>
+      <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div>
+          <label class="form-label">Type</label>
+          <select class="form-control" id="oppType">
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Internship">Internship</option>
+            <option value="Contract">Contract</option>
+            <option value="Collaboration">Collaboration</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Location</label>
+          <input class="form-control" id="oppLocation" placeholder="e.g., Remote, Nairobi" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Skills Required (comma separated)</label>
+        <input class="form-control" id="oppSkills" placeholder="e.g., React, TypeScript, Node.js" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Compensation (optional)</label>
+        <input class="form-control" id="oppCompensation" placeholder="e.g., $80k/year or competitive" />
+      </div>
+      <button class="btn btn-primary btn-block" id="oppPublishBtn"><i class="fas fa-plus"></i> Post Opportunity</button>
+    </div>
+  </div>
+
+  <!-- ===== COMMUNITY MODAL ===== -->
+  <div class="modal-overlay" id="communityModal">
+    <div class="modal-content">
+      <button class="close" id="communityModalClose">&times;</button>
+      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-users" style="color:var(--gold);"></i> Create a Community</h3>
+      <div class="form-group">
+        <label class="form-label">Community Name</label>
+        <input class="form-control" id="communityName" placeholder="e.g., React Developers Africa" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="communityDesc" rows="3" placeholder="What is this community about?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-control" id="communityCategory">
+          <option value="Technology">Technology</option>
+          <option value="Design">Design</option>
+          <option value="Business">Business</option>
+          <option value="Education">Education</option>
+          <option value="Health">Health</option>
+          <option value="Finance">Finance</option>
+          <option value="Creative">Creative</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" id="communityPublishBtn"><i class="fas fa-plus"></i> Create Community</button>
+    </div>
+  </div>
+
   <!-- ================================================================ -->
-  <!-- JAVASCRIPT – FULLY FUNCTIONAL DASHBOARD -->
+  <!-- JAVASCRIPT – FULL PRODUCTION PLATFORM -->
   <!-- ================================================================ -->
   <script>
     (function() {
       'use strict';
 
       // ================================================================
-      // STATE (stores all data in memory – localStorage available)
+      // STATE
       // ================================================================
       const state = {
         user: {
           id: 'user_1',
-          name: 'Alex Johnson',
-          username: 'alexj',
-          avatar: 'AJ',
-          title: 'Senior Software Engineer',
+          name: 'SkiloraX User',
+          username: 'skilorax_user',
+          avatar: 'SK',
+          avatarData: null,
+          title: 'Professional',
           location: 'Nairobi, Kenya',
-          bio: 'Full-stack developer passionate about building great products that make a difference.',
-          skills: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Python', 'Docker'],
-          endorsements: 42,
-          connections: 156,
-          followers: 89,
-          following: 124
+          bio: '',
+          skills: [],
+          endorsements: 0,
+          connections: 0,
+          followers: 0,
+          following: 0
         },
         sparks: [],
-        experts: [],
         products: [],
+        shortVideos: [],
         opportunities: [],
         communities: [],
         notifications: [],
@@ -491,29 +614,14 @@
       };
 
       // ================================================================
-      // LOAD FROM localStorage
+      // LOAD / SAVE
       // ================================================================
       function loadState() {
         try {
-          const saved = localStorage.getItem('skilorax_state');
+          const saved = localStorage.getItem('skilorax_prod_state');
           if (saved) {
             const parsed = JSON.parse(saved);
             Object.assign(state, parsed);
-            // Make sure user data is always present
-            if (!state.user) state.user = {
-              id: 'user_1',
-              name: 'Alex Johnson',
-              username: 'alexj',
-              avatar: 'AJ',
-              title: 'Senior Software Engineer',
-              location: 'Nairobi, Kenya',
-              bio: 'Full-stack developer passionate about building great products.',
-              skills: ['JavaScript', 'React', 'Node.js', 'TypeScript', 'Python', 'Docker'],
-              endorsements: 42,
-              connections: 156,
-              followers: 89,
-              following: 124
-            };
             return true;
           }
         } catch (e) {}
@@ -522,305 +630,8 @@
 
       function saveState() {
         try {
-          localStorage.setItem('skilorax_state', JSON.stringify(state));
+          localStorage.setItem('skilorax_prod_state', JSON.stringify(state));
         } catch (e) {}
-      }
-
-      // ================================================================
-      // GENERATE MOCK DATA (only if no saved data)
-      // ================================================================
-      function generateMockData() {
-        if (loadState()) return;
-
-        state.sparks = [{
-          id: 's1',
-          authorId: 'user_2',
-          author: { name: 'Sarah Chen', avatar: 'SC', verified: true },
-          type: 'text',
-          content: 'Just launched a new React component library for design systems! 🚀 Built with TypeScript and Tailwind. Check it out on GitHub!',
-          skills: ['React', 'TypeScript', 'DesignSystems'],
-          media: [],
-          likes: 24,
-          comments: 8,
-          reSparks: 3,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '2h ago',
-          visibility: 'public',
-          pollOptions: null,
-          pollVotes: null
-        }, {
-          id: 's2',
-          authorId: 'user_3',
-          author: { name: 'Marcus Rivera', avatar: 'MR', verified: false },
-          type: 'video',
-          content: 'Machine learning tutorial: Building your first neural network from scratch. Full walkthrough with code.',
-          skills: ['MachineLearning', 'Python', 'TensorFlow'],
-          media: [{ type: 'video', url: 'demo.mp4', aspect: '16:9' }],
-          likes: 18,
-          comments: 5,
-          reSparks: 2,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '4h ago',
-          visibility: 'public',
-          pollOptions: null,
-          pollVotes: null
-        }, {
-          id: 's3',
-          authorId: 'user_4',
-          author: { name: 'Priya Patel', avatar: 'PP', verified: true },
-          type: 'poll',
-          content: 'Which database should I use for a new startup?',
-          skills: ['ProductManagement', 'Database'],
-          media: [],
-          likes: 31,
-          comments: 12,
-          reSparks: 7,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '6h ago',
-          visibility: 'public',
-          pollOptions: ['PostgreSQL', 'MongoDB', 'Firebase', 'Supabase'],
-          pollVotes: { 'PostgreSQL': 12, 'MongoDB': 8, 'Firebase': 5, 'Supabase': 6 }
-        }, {
-          id: 's4',
-          authorId: 'user_5',
-          author: { name: 'James Kim', avatar: 'JK', verified: false },
-          type: 'project',
-          content: 'Built a real-time chat app with React and Supabase. Complete with authentication, messaging, and online status.',
-          skills: ['React', 'Supabase', 'Realtime'],
-          media: [{ type: 'image', url: 'project.png' }],
-          likes: 12,
-          comments: 3,
-          reSparks: 2,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '1d ago',
-          visibility: 'public',
-          pollOptions: null,
-          pollVotes: null
-        }, {
-          id: 's5',
-          authorId: 'user_1',
-          author: { name: 'Alex Johnson', avatar: 'AJ', verified: true },
-          type: 'achievement',
-          content: '🎉 Just earned my AWS Solutions Architect certification! This has been a 6-month journey and I\'m excited to apply these skills.',
-          skills: ['AWS', 'Cloud Computing'],
-          media: [],
-          likes: 45,
-          comments: 18,
-          reSparks: 12,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '3d ago',
-          visibility: 'public',
-          pollOptions: null,
-          pollVotes: null
-        }, {
-          id: 's6',
-          authorId: 'user_2',
-          author: { name: 'Sarah Chen', avatar: 'SC', verified: true },
-          type: 'question',
-          content: 'What\'s the best way to learn design systems? I want to move from UI design to design systems architecture.',
-          skills: ['UI Design', 'DesignSystems'],
-          media: [],
-          likes: 8,
-          comments: 14,
-          reSparks: 2,
-          saved: false,
-          liked: false,
-          reSpark: false,
-          time: '5d ago',
-          visibility: 'public',
-          pollOptions: null,
-          pollVotes: null
-        }];
-
-        state.experts = [{
-          id: 'exp1',
-          name: 'Dr. Sarah Kimani',
-          avatar: 'SK',
-          title: 'AI/ML Specialist',
-          skills: ['Machine Learning', 'Python', 'TensorFlow'],
-          rating: 4.9,
-          reviews: 127,
-          price: 150,
-          available: true,
-          verified: true
-        }, {
-          id: 'exp2',
-          name: 'James Ochieng',
-          avatar: 'JO',
-          title: 'Full-Stack Developer',
-          skills: ['React', 'Node.js', 'TypeScript'],
-          rating: 4.8,
-          reviews: 89,
-          price: 120,
-          available: true,
-          verified: true
-        }, {
-          id: 'exp3',
-          name: 'Grace Muthoni',
-          avatar: 'GM',
-          title: 'UX/UI Designer',
-          skills: ['Figma', 'UI Design', 'User Research'],
-          rating: 4.7,
-          reviews: 64,
-          price: 100,
-          available: false,
-          verified: false
-        }];
-
-        state.products = [{
-          id: 'prod1',
-          name: 'React Masterclass',
-          type: 'Digital',
-          price: 49,
-          seller: 'Tech Academy',
-          rating: 4.9,
-          image: '📚',
-          description: 'Complete React development course with projects.'
-        }, {
-          id: 'prod2',
-          name: 'UI Design Pro Kit',
-          type: 'Digital',
-          price: 29,
-          seller: 'Design Studio',
-          rating: 4.8,
-          image: '🎨',
-          description: 'Professional UI components and design system.'
-        }, {
-          id: 'prod3',
-          name: 'AWS Solutions Architect',
-          type: 'Digital',
-          price: 79,
-          seller: 'Cloud Experts',
-          rating: 4.7,
-          image: '☁️',
-          description: 'Comprehensive AWS certification preparation.'
-        }];
-
-        state.opportunities = [{
-          id: 'opp1',
-          title: 'Senior React Developer',
-          company: 'TechCorp',
-          type: 'Full-time',
-          location: 'Remote',
-          skills: ['React', 'TypeScript', 'Node.js'],
-          description: 'Build and scale web applications for a fast-growing startup.'
-        }, {
-          id: 'opp2',
-          title: 'Freelance UI/UX Designer',
-          company: 'DesignHub',
-          type: 'Freelance',
-          location: 'Remote',
-          skills: ['Figma', 'UI Design', 'Prototyping'],
-          description: 'Redesign the mobile app experience for a fintech company.'
-        }, {
-          id: 'opp3',
-          title: 'Data Science Intern',
-          company: 'AnalyticsPro',
-          type: 'Internship',
-          location: 'Nairobi, Kenya',
-          skills: ['Python', 'SQL', 'Machine Learning'],
-          description: 'Work on real-world data projects and build ML models.'
-        }];
-
-        state.communities = [{
-          id: 'com1',
-          name: 'React Developers Africa',
-          members: 1240,
-          icon: '⚛️',
-          description: 'Share React tips, projects, and opportunities.'
-        }, {
-          id: 'com2',
-          name: 'Data Science Community',
-          members: 890,
-          icon: '📊',
-          description: 'Machine learning, data analysis, and AI discussions.'
-        }, {
-          id: 'com3',
-          name: 'UX/UI Designers',
-          members: 560,
-          icon: '🎨',
-          description: 'Design thinking, tools, and portfolio reviews.'
-        }, {
-          id: 'com4',
-          name: 'Cloud & DevOps Engineers',
-          members: 420,
-          icon: '☁️',
-          description: 'AWS, Kubernetes, CI/CD, and infrastructure as code.'
-        }];
-
-        state.notifications = [{
-          id: 'n1',
-          icon: 'fa-user-plus',
-          text: 'Sarah Chen followed you',
-          time: '10m ago',
-          read: false
-        }, {
-          id: 'n2',
-          icon: 'fa-thumbs-up',
-          text: 'Marcus Rivera liked your Spark',
-          time: '1h ago',
-          read: false
-        }, {
-          id: 'n3',
-          icon: 'fa-comment',
-          text: 'Priya Patel commented on your Spark',
-          time: '3h ago',
-          read: true
-        }, {
-          id: 'n4',
-          icon: 'fa-calendar-check',
-          text: 'Your booking with James Kim is confirmed',
-          time: '1d ago',
-          read: true
-        }, {
-          id: 'n5',
-          icon: 'fa-bolt',
-          text: 'New opportunity: Senior React Developer at TechCorp',
-          time: '2d ago',
-          read: true
-        }];
-
-        state.chats = [{
-          id: 'chat1',
-          name: 'Sarah Chen',
-          avatar: 'SC',
-          last: 'Thanks for the feedback!',
-          time: '2m ago',
-          unread: 2
-        }, {
-          id: 'chat2',
-          name: 'Marcus Rivera',
-          avatar: 'MR',
-          last: 'Let\'s schedule a call next week',
-          time: '1h ago',
-          unread: 0
-        }, {
-          id: 'chat3',
-          name: 'Priya Patel',
-          avatar: 'PP',
-          last: 'The design looks great!',
-          time: '3h ago',
-          unread: 0
-        }, {
-          id: 'chat4',
-          name: 'James Kim',
-          avatar: 'JK',
-          last: 'Can you review my PR?',
-          time: '1d ago',
-          unread: 1
-        }];
-
-        saveState();
       }
 
       // ================================================================
@@ -841,6 +652,10 @@
           toast.classList.remove('show');
           setTimeout(() => toast.remove(), 300);
         }, 3200);
+      }
+
+      function getInitials(name) {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       }
 
       // ================================================================
@@ -870,11 +685,12 @@
       }
 
       // ================================================================
-      // RENDER ENGINE
+      // RENDER
       // ================================================================
       function renderPage(page) {
         const map = {
           feed: renderFeed,
+          short: renderShort,
           explore: renderExplore,
           experts: renderExperts,
           market: renderMarket,
@@ -894,14 +710,19 @@
         if (!container) return;
         if (state.sparks.length === 0) {
           container.innerHTML =
-            `<div class="card" style="text-align:center; padding:2rem;"><p style="color:var(--text-secondary);">No Sparks yet. Create the first one!</p></div>`;
+            `<div class="card" style="text-align:center; padding:3rem 2rem;">
+              <i class="fas fa-bolt" style="font-size:2.5rem; color:var(--gold);"></i>
+              <h3 style="margin-top:1rem;">No Sparks yet</h3>
+              <p style="color:var(--text-secondary);">Be the first to share something amazing!</p>
+              <button class="btn btn-primary" style="margin-top:1rem;" onclick="document.getElementById('composerTrigger').click();">
+                <i class="fas fa-plus"></i> Create a Spark
+              </button>
+            </div>`;
           return;
         }
-        // Sort by most recent (newest first) – using time string for mock
         const sorted = [...state.sparks].reverse();
         container.innerHTML = sorted.map(s => buildSparkHTML(s)).join('');
         attachSparkEvents(container);
-        saveState();
       }
 
       function buildSparkHTML(s) {
@@ -943,7 +764,9 @@
         return `
           <div class="spark" data-id="${s.id}">
             <div class="spark-header">
-              <div class="avatar">${s.author.avatar}</div>
+              <div class="avatar" style="${s.author.avatarData ? 'background:transparent;' : ''}">
+                ${s.author.avatarData ? `<img src="${s.author.avatarData}" alt="avatar" />` : s.author.avatar}
+              </div>
               <div class="info">
                 <div class="name">${s.author.name}${s.author.verified ? ' <span class="badge badge-green"><i class="fas fa-check-circle"></i> Verified</span>' : ''}</div>
                 <div class="handle">${s.time} · ${s.visibility === 'public' ? '🌐 Public' : '🔒 Private'}</div>
@@ -990,7 +813,6 @@
               showToast(spark.liked ? 'Liked!' : 'Unliked', 'info'); }
           });
         });
-
         container.querySelectorAll('[data-action="reSpark"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1001,7 +823,6 @@
               showToast(spark.reSpark ? 'Re-Sparked!' : 'Removed Re-Spark', 'info'); }
           });
         });
-
         container.querySelectorAll('[data-action="comment"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1017,7 +838,6 @@
             }
           });
         });
-
         container.querySelectorAll('[data-action="share"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1031,7 +851,6 @@
             }
           });
         });
-
         container.querySelectorAll('[data-action="save"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1041,7 +860,6 @@
               showToast(spark.saved ? 'Saved!' : 'Unsaved', 'info'); }
           });
         });
-
         container.querySelectorAll('[data-action="delete"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1050,7 +868,6 @@
               showToast('Spark deleted.', 'warning'); }
           });
         });
-
         container.querySelectorAll('.poll-option').forEach(el => {
           el.addEventListener('click', function() {
             const id = this.dataset.poll;
@@ -1064,138 +881,141 @@
         });
       }
 
+      // ----- SHORT -----
+      function renderShort() {
+        const list = document.getElementById('shortVideoList');
+        if (!list) return;
+        list.innerHTML = state.shortVideos.map(v => `
+          <div style="background:var(--surface); border-radius:var(--radius); overflow:hidden; border:1px solid var(--border);">
+            <video src="${v.url}" controls style="width:100%; aspect-ratio:9/16; background:#000;"></video>
+            <div style="padding:0.5rem; font-size:0.75rem; font-weight:500;">${v.name}</div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('uploadShortBtn').addEventListener('click', function() {
+        document.getElementById('shortFileInput').click();
+      });
+      document.getElementById('shortFileInput').addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.shortVideos.push({ id: uid(), url: e.target.result, name: file.name });
+          saveState();
+          renderShort();
+          showToast('Short Spark uploaded!', 'success');
+        };
+        reader.readAsDataURL(file);
+        this.value = '';
+      });
+
       // ----- EXPLORE -----
       function renderExplore() {
         const grid = document.getElementById('exploreGrid');
-        if (!grid) return;
-        const items = [
-          { type: 'person', name: 'Sarah Chen', avatar: 'SC', title: 'UX Designer', skills: ['Figma',
-            'UI Design'] },
-          { type: 'person', name: 'Marcus Rivera', avatar: 'MR', title: 'Data Scientist', skills: ['Python',
-              'ML'] },
-          { type: 'person', name: 'Priya Patel', avatar: 'PP', title: 'Product Manager', skills: ['Agile',
-              'Strategy'] },
-          { type: 'person', name: 'James Kim', avatar: 'JK', title: 'DevOps Engineer', skills: ['AWS',
-              'Kubernetes'] },
-          { type: 'skill', name: 'React', count: 1240 },
-          { type: 'skill', name: 'Machine Learning', count: 890 },
-          { type: 'skill', name: 'UI/UX Design', count: 560 },
-          { type: 'skill', name: 'Cloud Computing', count: 420 },
+        const people = [
+          { name: 'Sarah Chen', avatar: 'SC', title: 'UX Designer', skills: ['Figma', 'UI Design'] },
+          { name: 'Marcus Rivera', avatar: 'MR', title: 'Data Scientist', skills: ['Python', 'ML'] },
+          { name: 'Priya Patel', avatar: 'PP', title: 'Product Manager', skills: ['Agile', 'Strategy'] },
+          { name: 'James Kim', avatar: 'JK', title: 'DevOps Engineer', skills: ['AWS', 'Kubernetes'] },
         ];
-        grid.innerHTML = items.map(item => {
-          if (item.type === 'person') {
-            return `
-              <div class="discover-card">
-                <div class="avatar" style="margin:0 auto 0.5rem;">${item.avatar}</div>
-                <div class="name">${item.name}</div>
-                <div class="title">${item.title}</div>
-                <div style="display:flex;flex-wrap:wrap;gap:0.25rem;justify-content:center;margin:0.5rem 0;">${item.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
-                <button class="btn btn-primary btn-sm" style="margin-top:0.5rem;" data-action="follow">Follow</button>
-              </div>
-            `;
-          } else {
-            return `
-              <div class="discover-card">
-                <div style="font-size:2rem; margin-bottom:0.25rem;">#</div>
-                <div class="name" style="color:var(--purple);">${item.name}</div>
-                <div class="title">${item.count} Sparks</div>
-                <button class="btn btn-secondary btn-sm" style="margin-top:0.5rem;">Explore</button>
-              </div>
-            `;
-          }
-        }).join('');
-        grid.querySelectorAll('[data-action="follow"]').forEach(btn => {
-          btn.addEventListener('click', function() { showToast('Following!', 'success');
-            this.textContent = '✓ Following';
-            this.disabled = true; });
-        });
+        grid.innerHTML = people.map(p => `
+          <div class="discover-card">
+            <div class="avatar" style="margin:0 auto 0.5rem;">${p.avatar}</div>
+            <div class="name">${p.name}</div>
+            <div class="title">${p.title}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;justify-content:center;margin:0.5rem 0;">${p.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
+            <button class="btn btn-primary btn-sm" style="margin-top:0.5rem;" onclick="showToast('Followed ${p.name}!','success'); this.textContent='✓ Following';this.disabled=true;">Follow</button>
+          </div>
+        `).join('');
       }
 
       // ----- EXPERTS -----
       function renderExperts() {
         const grid = document.getElementById('expertsGrid');
-        if (!grid) return;
-        grid.innerHTML = state.experts.map(e => `
+        const experts = [
+          { name: 'Dr. Sarah Kimani', avatar: 'SK', title: 'AI/ML Specialist', skills: ['Machine Learning',
+              'Python', 'TensorFlow'
+            ], price: 150, available: true },
+          { name: 'James Ochieng', avatar: 'JO', title: 'Full-Stack Developer', skills: ['React', 'Node.js',
+              'TypeScript'
+            ], price: 120, available: true },
+          { name: 'Grace Muthoni', avatar: 'GM', title: 'UX/UI Designer', skills: ['Figma', 'UI Design',
+              'User Research'
+            ], price: 100, available: true },
+        ];
+        grid.innerHTML = experts.map(e => `
           <div class="expert-card card">
             <div class="top">
               <div class="avatar">${e.avatar}</div>
               <div class="info">
-                <h4>${e.name} ${e.verified ? '<span class="badge badge-green"><i class="fas fa-check-circle"></i></span>' : ''}</h4>
+                <h4>${e.name}</h4>
                 <div class="title">${e.title}</div>
-                <div class="rating"><i class="fas fa-star" style="color:var(--gold);"></i> ${e.rating} (${e.reviews} reviews)</div>
               </div>
             </div>
             <div class="skills">${e.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
             <div class="footer">
               <div><span class="price">$${e.price}</span> <span style="color:var(--text-muted);font-size:var(--text-sm);">/ session</span></div>
-              <span class="badge ${e.available ? 'badge-green' : 'badge-red'}">${e.available ? 'Available' : 'Booked'}</span>
-              <button class="btn btn-primary btn-sm book-expert" data-id="${e.id}"><i class="fas fa-calendar-plus"></i> Book</button>
+              <span class="badge badge-green">Available</span>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Booking request sent to ${e.name}!','success');"><i class="fas fa-calendar-plus"></i> Book</button>
             </div>
           </div>
         `).join('');
-        grid.querySelectorAll('.book-expert').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const expert = state.experts.find(e => e.id === id);
-            if (expert) showToast(`Booking request sent to ${expert.name}!`, 'success');
-          });
-        });
       }
 
-      // ----- MARKET -----
+      // ----- MARKET (Products with multi-currency) -----
       function renderMarket() {
         const grid = document.getElementById('marketGrid');
-        if (!grid) return;
+        if (state.products.length === 0) {
+          grid.innerHTML = `
+            <div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);">
+              <i class="fas fa-store" style="font-size:2rem;"></i>
+              <p style="margin-top:0.5rem;">No products yet. List your first product!</p>
+            </div>
+          `;
+          return;
+        }
         grid.innerHTML = state.products.map(p => `
           <div class="product-card card">
-            <div class="image">${p.image}</div>
+            <div class="image">${p.image || '📦'}</div>
             <div class="name">${p.name}</div>
             <div class="desc">${p.description}</div>
-            <div style="display:flex; gap:0.25rem; margin:0.25rem 0;">
+            <div style="display:flex; gap:0.25rem; margin:0.25rem 0; flex-wrap:wrap;">
               <span class="badge badge-purple">${p.type}</span>
-              <span class="badge badge-gold"><i class="fas fa-star"></i> ${p.rating}</span>
+              <span class="currency-badge">${p.currency || 'USD'}</span>
             </div>
             <div class="footer">
-              <span class="price">$${p.price}</span>
-              <button class="btn btn-primary btn-sm view-product" data-id="${p.id}"><i class="fas fa-shopping-cart"></i> View</button>
+              <span class="price">${p.currencySymbol || '$'}${p.price}</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);">by ${p.seller}</span>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Viewing ${p.name}...','info');"><i class="fas fa-shopping-cart"></i> View</button>
             </div>
           </div>
         `).join('');
-        grid.querySelectorAll('.view-product').forEach(btn => {
-          btn.addEventListener('click', function() {
-            showToast('Product page coming soon!', 'info');
-          });
-        });
       }
 
       // ----- CHAT -----
       function renderChat() {
         const list = document.getElementById('chatList');
-        if (!list) return;
-        list.innerHTML = state.chats.map(c => `
-          <div class="chat-item" data-id="${c.id}">
-            <div class="avatar">${c.avatar}</div>
-            <div class="info">
-              <div class="name">${c.name}</div>
-              <div class="last">${c.last}</div>
-            </div>
-            <div class="meta">
-              <div>${c.time}</div>
-              ${c.unread > 0 ? `<span class="badge badge-gold">${c.unread}</span>` : ''}
-            </div>
+        list.innerHTML = `
+          <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+            <i class="fas fa-comments" style="font-size:2rem;"></i>
+            <p style="margin-top:0.5rem;">No conversations yet. Start a chat from a profile.</p>
           </div>
-        `).join('');
-        list.querySelectorAll('.chat-item').forEach(item => {
-          item.addEventListener('click', function() {
-            showToast('Opening conversation with ' + this.querySelector('.name').textContent, 'info');
-          });
-        });
+        `;
       }
 
       // ----- NOTIFICATIONS -----
       function renderNotifications() {
         const container = document.getElementById('notificationsContainer');
-        if (!container) return;
+        if (state.notifications.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+              <i class="fas fa-bell" style="font-size:2rem;"></i>
+              <p style="margin-top:0.5rem;">No notifications yet.</p>
+            </div>
+          `;
+          return;
+        }
         container.innerHTML = state.notifications.map(n => `
           <div class="notif-item ${n.read ? '' : 'unread'}">
             <i class="fas ${n.icon}"></i>
@@ -1217,70 +1037,87 @@
       // ----- PROFILE -----
       function renderProfile() {
         const u = state.user;
-        document.querySelectorAll('.user-avatar').forEach(el => el.textContent = u.avatar);
+        const avatarEl = document.querySelectorAll('.user-avatar');
+        avatarEl.forEach(el => {
+          if (u.avatarData) {
+            el.innerHTML = `<img src="${u.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
+          } else {
+            el.textContent = u.avatar;
+          }
+        });
         document.getElementById('profileName').textContent = u.name;
         document.getElementById('profileTitle').textContent = u.title;
         document.getElementById('profileLocation').textContent = u.location;
-        document.getElementById('profileBio').textContent = u.bio;
+        document.getElementById('profileBio').textContent = u.bio || 'No bio yet.';
         document.getElementById('statEndorsements').textContent = u.endorsements;
         document.getElementById('statConnections').textContent = u.connections;
         document.getElementById('statFollowers').textContent = u.followers;
         document.getElementById('statFollowing').textContent = u.following;
         const skillsContainer = document.getElementById('profileSkills');
-        if (skillsContainer) skillsContainer.innerHTML = u.skills.map(s => `<span class="badge badge-gold">${s}</span>`)
-          .join('');
+        if (skillsContainer) {
+          skillsContainer.innerHTML = u.skills.length ? u.skills.map(s => `<span class="badge badge-gold">${s}</span>`)
+            .join('') : '<span style="color:var(--text-muted);font-size:var(--text-sm);">No skills added yet.</span>';
+        }
       }
 
       // ----- OPPORTUNITIES -----
       function renderOpportunities() {
         const grid = document.getElementById('opportunitiesGrid');
-        if (!grid) return;
-        grid.innerHTML = state.opportunities.map(o => `
-          <div class="card" style="padding:1.25rem;">
-            <h4 style="font-weight:700;">${o.title}</h4>
-            <div style="color:var(--text-secondary); font-weight:600;">${o.company}</div>
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:0.25rem 0;">
-              <span class="badge badge-blue">${o.type}</span>
-              <span class="badge badge-purple">${o.location}</span>
+        if (state.opportunities.length === 0) {
+          grid.innerHTML = `
+            <div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);">
+              <i class="fas fa-briefcase" style="font-size:2rem;"></i>
+              <p style="margin-top:0.5rem;">No opportunities yet. Post one!</p>
             </div>
-            <p style="font-size:var(--text-sm); color:var(--text-secondary); margin:0.25rem 0;">${o.description}</p>
+          `;
+          return;
+        }
+        grid.innerHTML = state.opportunities.map(o => `
+          <div class="opportunity-card card">
+            <div class="header">
+              <h3>${o.title}</h3>
+              <span class="badge badge-blue">${o.type}</span>
+            </div>
+            <div class="meta"><strong>${o.company}</strong> · ${o.location}</div>
+            <p style="color:var(--text-secondary); margin:0.5rem 0;">${o.description}</p>
             <div style="display:flex; flex-wrap:wrap; gap:0.25rem; margin:0.5rem 0;">
               ${o.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}
             </div>
-            <button class="btn btn-primary btn-sm apply-opp" data-id="${o.id}"><i class="fas fa-paper-plane"></i> Apply</button>
+            ${o.compensation ? `<div style="font-size:var(--text-sm); color:var(--text-secondary); margin-bottom:0.5rem;">💰 ${o.compensation}</div>` : ''}
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('Application submitted for ${o.title}!','success');"><i class="fas fa-paper-plane"></i> Apply</button>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Saved!','success');"><i class="fas fa-bookmark"></i> Save</button>
+            </div>
           </div>
         `).join('');
-        grid.querySelectorAll('.apply-opp').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const opp = state.opportunities.find(o => o.id === id);
-            if (opp) showToast(`Application submitted for ${opp.title}!`, 'success');
-          });
-        });
       }
 
       // ----- COMMUNITIES -----
       function renderCommunities() {
         const grid = document.getElementById('communitiesGrid');
-        if (!grid) return;
+        if (state.communities.length === 0) {
+          grid.innerHTML = `
+            <div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);">
+              <i class="fas fa-users" style="font-size:2rem;"></i>
+              <p style="margin-top:0.5rem;">No communities yet. Create one!</p>
+            </div>
+          `;
+          return;
+        }
         grid.innerHTML = state.communities.map(c => `
-          <div class="discover-card">
-            <div style="font-size:2.5rem;">${c.icon}</div>
-            <div class="name">${c.name}</div>
-            <div class="title">${c.members} members</div>
-            <p style="font-size:var(--text-sm); color:var(--text-secondary); margin:0.25rem 0;">${c.description}</p>
-            <button class="btn btn-primary btn-sm join-community" data-id="${c.id}"><i class="fas fa-user-plus"></i> Join</button>
+          <div class="community-card">
+            <div class="header">
+              <h3>${c.name}</h3>
+              <span class="badge badge-purple">${c.category}</span>
+            </div>
+            <div class="meta">${c.members || 0} members · Created by ${c.creator}</div>
+            <p style="color:var(--text-secondary); margin:0.5rem 0;">${c.description}</p>
+            <div class="actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('Joined ${c.name}!','success'); this.textContent='✓ Joined';this.disabled=true;"><i class="fas fa-user-plus"></i> Join</button>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Following ${c.name}','success');"><i class="fas fa-bell"></i> Follow</button>
+            </div>
           </div>
         `).join('');
-        grid.querySelectorAll('.join-community').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const com = state.communities.find(c => c.id === id);
-            if (com) { showToast(`Joined ${com.name}!`, 'success');
-              this.textContent = '✓ Joined';
-              this.disabled = true; }
-          });
-        });
       }
 
       // ================================================================
@@ -1384,7 +1221,8 @@
         const newSpark = {
           id: uid(),
           authorId: state.user.id,
-          author: { name: state.user.name, avatar: state.user.avatar, verified: true },
+          author: { name: state.user.name, avatar: state.user.avatar, avatarData: state.user.avatarData,
+            verified: true },
           type: selectedType,
           content: content,
           skills: skills,
@@ -1409,6 +1247,170 @@
       });
 
       // ================================================================
+      // PRODUCT MODAL (Multi-Currency)
+      // ================================================================
+      const currencySymbols = {
+        USD: '$',
+        KES: 'KSh',
+        EUR: '€',
+        GBP: '£',
+        NGN: '₦',
+        ZAR: 'R',
+        GHS: '₵',
+        TZS: 'TSh',
+        UGX: 'USh'
+      };
+
+      document.getElementById('showProductModal').addEventListener('click', function() {
+        document.getElementById('productModal').classList.add('active');
+      });
+      document.getElementById('productModalClose').addEventListener('click', function() {
+        document.getElementById('productModal').classList.remove('active');
+      });
+      document.getElementById('productModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+      });
+
+      document.getElementById('productPublishBtn').addEventListener('click', function() {
+        const name = document.getElementById('productName').value.trim();
+        const desc = document.getElementById('productDesc').value.trim();
+        const price = parseFloat(document.getElementById('productPrice').value);
+        const currency = document.getElementById('productCurrency').value;
+        const type = document.getElementById('productType').value;
+        if (!name || !desc || isNaN(price)) {
+          showToast('Please fill in all fields.', 'error');
+          return;
+        }
+        const newProduct = {
+          id: uid(),
+          name,
+          description: desc,
+          price,
+          currency,
+          currencySymbol: currencySymbols[currency] || '$',
+          type,
+          image: '📦',
+          seller: state.user.name,
+          rating: 0
+        };
+        state.products.unshift(newProduct);
+        renderMarket();
+        document.getElementById('productModal').classList.remove('active');
+        document.getElementById('productName').value = '';
+        document.getElementById('productDesc').value = '';
+        document.getElementById('productPrice').value = '';
+        showToast('Product listed successfully!', 'success');
+        saveState();
+      });
+
+      // ================================================================
+      // OPPORTUNITY MODAL
+      // ================================================================
+      document.getElementById('showOpportunityModal').addEventListener('click', function() {
+        document.getElementById('opportunityModal').classList.add('active');
+      });
+      document.getElementById('opportunityModalClose').addEventListener('click', function() {
+        document.getElementById('opportunityModal').classList.remove('active');
+      });
+      document.getElementById('opportunityModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+      });
+
+      document.getElementById('oppPublishBtn').addEventListener('click', function() {
+        const title = document.getElementById('oppTitle').value.trim();
+        const company = document.getElementById('oppCompany').value.trim();
+        const desc = document.getElementById('oppDesc').value.trim();
+        const type = document.getElementById('oppType').value;
+        const location = document.getElementById('oppLocation').value.trim();
+        const skills = document.getElementById('oppSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+        const compensation = document.getElementById('oppCompensation').value.trim();
+        if (!title || !company || !desc) {
+          showToast('Please fill in title, company, and description.', 'error');
+          return;
+        }
+        const newOpp = {
+          id: uid(),
+          title,
+          company,
+          description: desc,
+          type,
+          location: location || 'Remote',
+          skills,
+          compensation: compensation || 'Competitive',
+          creator: state.user.name,
+          createdAt: new Date().toISOString()
+        };
+        state.opportunities.unshift(newOpp);
+        renderOpportunities();
+        document.getElementById('opportunityModal').classList.remove('active');
+        document.getElementById('oppTitle').value = '';
+        document.getElementById('oppCompany').value = '';
+        document.getElementById('oppDesc').value = '';
+        document.getElementById('oppLocation').value = '';
+        document.getElementById('oppSkills').value = '';
+        document.getElementById('oppCompensation').value = '';
+        showToast('Opportunity posted!', 'success');
+        saveState();
+      });
+
+      // ================================================================
+      // COMMUNITY MODAL
+      // ================================================================
+      document.getElementById('showCommunityModal').addEventListener('click', function() {
+        document.getElementById('communityModal').classList.add('active');
+      });
+      document.getElementById('communityModalClose').addEventListener('click', function() {
+        document.getElementById('communityModal').classList.remove('active');
+      });
+      document.getElementById('communityModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+      });
+
+      document.getElementById('communityPublishBtn').addEventListener('click', function() {
+        const name = document.getElementById('communityName').value.trim();
+        const desc = document.getElementById('communityDesc').value.trim();
+        const category = document.getElementById('communityCategory').value;
+        if (!name || !desc) {
+          showToast('Please fill in all fields.', 'error');
+          return;
+        }
+        const newCommunity = {
+          id: uid(),
+          name,
+          description: desc,
+          category,
+          members: 1,
+          creator: state.user.name,
+          createdAt: new Date().toISOString()
+        };
+        state.communities.unshift(newCommunity);
+        renderCommunities();
+        document.getElementById('communityModal').classList.remove('active');
+        document.getElementById('communityName').value = '';
+        document.getElementById('communityDesc').value = '';
+        showToast('Community created!', 'success');
+        saveState();
+      });
+
+      // ================================================================
+      // AVATAR UPLOAD
+      // ================================================================
+      document.getElementById('avatarUpload').addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.user.avatarData = e.target.result;
+          state.user.avatar = getInitials(state.user.name);
+          renderProfile();
+          saveState();
+          showToast('Profile picture updated!', 'success');
+        };
+        reader.readAsDataURL(file);
+        this.value = '';
+      });
+
+      // ================================================================
       // SIDEBAR TOGGLE
       // ================================================================
       document.getElementById('sidebarToggle').addEventListener('click', () => {
@@ -1421,7 +1423,7 @@
       });
 
       // ================================================================
-      // NAVIGATION
+      // NAVIGATION LINKS
       // ================================================================
       document.querySelectorAll('.sidebar .nav-link[data-page]').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -1442,7 +1444,7 @@
       document.getElementById('logoutBtn').addEventListener('click', function(e) {
         e.preventDefault();
         if (confirm('Sign out?')) {
-          localStorage.removeItem('skilorax_state');
+          localStorage.removeItem('skilorax_prod_state');
           showToast('Signed out.', 'info');
           setTimeout(() => window.location.reload(), 500);
         }
@@ -1455,15 +1457,23 @@
         const u = state.user;
         const name = prompt('Full name:', u.name);
         if (name !== null) u.name = name.trim() || u.name;
-        const title = prompt('Title:', u.title);
+        const title = prompt('Professional title:', u.title);
         if (title !== null) u.title = title.trim() || u.title;
+        const location = prompt('Location:', u.location);
+        if (location !== null) u.location = location.trim() || u.location;
         const bio = prompt('Bio:', u.bio);
         if (bio !== null) u.bio = bio.trim() || u.bio;
-        const skills = prompt('Skills (comma):', u.skills.join(', '));
+        const skills = prompt('Skills (comma separated):', u.skills.join(', '));
         if (skills !== null) u.skills = skills.split(',').map(s => s.trim()).filter(Boolean);
-        u.avatar = u.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        u.avatar = getInitials(u.name);
         renderProfile();
-        document.querySelectorAll('.user-avatar').forEach(el => el.textContent = u.avatar);
+        document.querySelectorAll('.user-avatar').forEach(el => {
+          if (u.avatarData) {
+            el.innerHTML = `<img src="${u.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
+          } else {
+            el.textContent = u.avatar;
+          }
+        });
         showToast('Profile updated!', 'success');
         saveState();
       });
@@ -1476,9 +1486,18 @@
         if (name) state.user.name = name;
         const username = document.getElementById('settingsUsername').value.trim();
         if (username) state.user.username = username;
-        state.user.avatar = state.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        const email = document.getElementById('settingsEmail').value.trim();
+        if (email) state.user.email = email;
+        state.user.avatar = getInitials(state.user.name);
         renderProfile();
-        document.querySelectorAll('.user-avatar').forEach(el => el.textContent = state.user.avatar);
+        document.querySelectorAll('.user-avatar').forEach(el => {
+          if (state.user.avatarData) {
+            el.innerHTML =
+              `<img src="${state.user.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
+          } else {
+            el.textContent = state.user.avatar;
+          }
+        });
         showToast('Settings saved!', 'success');
         saveState();
       });
@@ -1494,6 +1513,7 @@
             s.skills.some(sk => sk.toLowerCase().includes(q.toLowerCase()))
           );
           showToast(`Found ${results.length} Sparks matching "${q}"`, 'info');
+          // Optional: could render results in explore grid
         } else {
           showToast('Enter a search term.', 'warning');
         }
@@ -1512,21 +1532,35 @@
         }
         if (e.key === 'Escape') {
           closeComposer();
+          document.querySelectorAll('.modal-overlay.active').forEach(el => el.classList.remove('active'));
         }
       });
 
       // ================================================================
+      // UPDATE BADGE COUNTS
+      // ================================================================
+      function updateBadges() {
+        const notifCount = state.notifications.filter(n => !n.read).length;
+        document.querySelectorAll('.badge-red').forEach(el => el.textContent = notifCount);
+      }
+
+      // ================================================================
       // INIT
       // ================================================================
-      generateMockData();
+      if (!loadState()) {
+        // Set default user
+        state.user.name = 'SkiloraX User';
+        state.user.avatar = 'SK';
+        state.user.title = 'Professional';
+        state.user.location = 'Nairobi, Kenya';
+        saveState();
+      }
+      renderProfile();
       navigateTo('feed');
-
-      // Auto-save when user leaves
+      updateBadges();
       window.addEventListener('beforeunload', saveState);
-
-      console.log('🚀 SkiloraX Dashboard ready!');
-      console.log('📊 Data stored in localStorage. Use Ctrl+Shift+N to create a new Spark.');
-
+      console.log('🚀 SkiloraX Production Platform ready!');
+      console.log('📊 All data stored in localStorage.');
     })();
   </script>
 </body>
