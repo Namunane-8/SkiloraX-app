@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>SkiloraX — Profile Editor</title>
+  <title>SkiloraX — Profile & Expert Onboarding</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* ============================================================
-       SKILORAX — PROFILE EDITOR (Full)
-       ============================================================ */
+    /* ===== RESET & VARIABLES ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --gold: #fbbf24; --gold-dark: #f59e0b; --gold-light: #fef3c7;
@@ -64,7 +62,7 @@
     .form-control:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(251,191,36,0.15); }
     .form-control::placeholder { color: var(--text-muted); }
     textarea.form-control { resize: vertical; min-height: 80px; }
-    /* ===== APP SHELL ===== */
+    /* ----- APP SHELL ----- */
     .app { display: flex; min-height: 100vh; }
     .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 1rem 0.75rem; position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; z-index: 40; transition: transform 0.3s ease; overflow-y: auto; }
     .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem 1.25rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
@@ -123,7 +121,7 @@
     .profile-stats .stat .num { font-size: var(--text-xl); font-weight: 800; }
     .profile-stats .stat .label { font-size: var(--text-sm); color: var(--text-secondary); }
     .profile-skills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    /* ----- EDIT PROFILE MODAL ----- */
+    /* ----- MODALS ----- */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: var(--surface); border-radius: var(--radius-lg); max-width: 720px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 1.5rem; position: relative; animation: modalIn 0.25s ease; }
@@ -136,10 +134,10 @@
     .modal-content .preview-group .preview-item label { position: absolute; bottom: 4px; right: 4px; background: var(--gold); color: var(--text); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.6rem; font-weight: 600; cursor: pointer; }
     .modal-content .preview-group .preview-item .remove { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .modal-content .preview-group .preview-item input[type="file"] { display: none; }
-    .modal-content .form-group .skills-input { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
-    .modal-content .form-group .skills-input .skill-tag { background: var(--purple-light); color: var(--purple); padding: 0.1rem 0.5rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; }
-    .modal-content .form-group .skills-input .skill-tag .remove { cursor: pointer; font-size: 0.7rem; color: var(--text-muted); }
-    .modal-content .form-group .skills-input .skill-tag .remove:hover { color: #ef4444; }
+    .modal-content .skills-input { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+    .modal-content .skills-input .skill-tag { background: var(--purple-light); color: var(--purple); padding: 0.1rem 0.5rem; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; }
+    .modal-content .skills-input .skill-tag .remove { cursor: pointer; font-size: 0.7rem; color: var(--text-muted); }
+    .modal-content .skills-input .skill-tag .remove:hover { color: #ef4444; }
     /* ----- BOTTOM NAV ----- */
     .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-nav-height); background: var(--surface); border-top: 1px solid var(--border); z-index: 45; justify-content: space-around; align-items: center; padding: 0 0.5rem; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
     .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem; color: var(--text-muted); font-size: 0.55rem; font-weight: 500; cursor: pointer; padding: 0.2rem 0.4rem; min-width: 44px; transition: var(--transition); background: none; border: none; font-family: var(--font); position: relative; }
@@ -268,7 +266,14 @@
       <!-- ===== PAGE: EXPERTS ===== -->
       <section id="page-experts" class="page hidden">
         <div class="page-header"><h1>Find <span class="text-gradient">Experts</span></h1><p>Connect with professionals and view their work.</p></div>
-        <div id="expertsGrid"><div class="empty-state" style="text-align:center;padding:3rem 2rem;"><i class="fas fa-user-tie" style="font-size:3rem;color:var(--gold);margin-bottom:1rem;"></i><h3 style="font-size:var(--text-xl);font-weight:700;margin-bottom:0.5rem;">No experts yet</h3><p style="color:var(--text-secondary);max-width:400px;margin:0 auto 1.5rem;">Are you an expert? Share your skills and connect with professionals.</p><button class="btn btn-primary" id="becomeExpertBtn"><i class="fas fa-plus"></i> Become an Expert</button></div></div>
+        <div id="expertsGrid">
+          <div class="empty-state" style="text-align:center;padding:3rem 2rem;">
+            <i class="fas fa-user-tie" style="font-size:3rem;color:var(--gold);margin-bottom:1rem;"></i>
+            <h3 style="font-size:var(--text-xl);font-weight:700;margin-bottom:0.5rem;">No experts yet</h3>
+            <p style="color:var(--text-secondary);max-width:400px;margin:0 auto 1.5rem;">Are you an expert? Share your skills and connect with professionals.</p>
+            <button class="btn btn-primary" id="becomeExpertBtn"><i class="fas fa-plus"></i> Become an Expert</button>
+          </div>
+        </div>
       </section>
 
       <!-- ===== PAGE: MARKET ===== -->
@@ -290,7 +295,7 @@
         <div class="card" style="text-align:center;padding:2rem;color:var(--text-muted);"><i class="fas fa-bell" style="font-size:2rem;"></i><p style="margin-top:0.5rem;">No notifications yet.</p></div>
       </section>
 
-      <!-- ===== PAGE: PROFILE (Enhanced) ===== -->
+      <!-- ===== PAGE: PROFILE ===== -->
       <section id="page-profile" class="page hidden">
         <div class="page-header"><h1>Your <span class="text-gradient">Profile</span></h1><p>Showcase your skills, portfolio, and professional identity.</p></div>
 
@@ -428,6 +433,55 @@
     </div>
   </div>
 
+  <!-- ===== EXPERT APPLICATION MODAL ===== -->
+  <div class="modal-overlay" id="expertModal">
+    <div class="modal-content">
+      <button class="close" id="expertModalClose">&times;</button>
+      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-user-tie" style="color:var(--gold);"></i> Become an Expert</h3>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">Fill in your expertise details to become a verified expert on SkiloraX.</p>
+
+      <div class="form-group">
+        <label class="form-label">Expert Title <span style="color:var(--red);">*</span></label>
+        <input class="form-control" id="expertTitle" placeholder="e.g., AI/ML Specialist" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Expert Bio <span style="color:var(--red);">*</span></label>
+        <textarea class="form-control" id="expertBio" rows="3" placeholder="Tell us about your expertise and experience."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Skills (comma separated) <span style="color:var(--red);">*</span></label>
+        <input class="form-control" id="expertSkills" placeholder="e.g., Machine Learning, Python, TensorFlow" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Years of Experience</label>
+        <input class="form-control" id="expertExperience" type="number" placeholder="e.g., 5" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Portfolio URL (optional)</label>
+        <input class="form-control" id="expertPortfolio" placeholder="https://yourportfolio.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Services Offered (comma separated)</label>
+        <input class="form-control" id="expertServices" placeholder="e.g., Consultation, Training, Project Development" />
+      </div>
+      <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div>
+          <label class="form-label">Hourly Rate ($)</label>
+          <input class="form-control" id="expertRate" type="number" placeholder="e.g., 50" />
+        </div>
+        <div>
+          <label class="form-label">Availability</label>
+          <select class="form-control" id="expertAvailability">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked</option>
+            <option value="Limited">Limited Availability</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block" id="expertSubmitBtn"><i class="fas fa-check"></i> Become Expert</button>
+    </div>
+  </div>
+
   <!-- ===== PRODUCT MODAL ===== -->
   <div class="modal-overlay" id="productModal">
     <div class="modal-content">
@@ -471,7 +525,7 @@
   </div>
 
   <!-- ================================================================ -->
-  <!-- JAVASCRIPT – COMPLETE WITH PROFILE EDITOR -->
+  <!-- JAVASCRIPT – COMPLETE WITH EXPERT ONBOARDING -->
   <!-- ================================================================ -->
   <script>
     (function() {
@@ -494,7 +548,8 @@
           connections: 0,
           followers: 0,
           following: 0,
-          isExpert: false
+          isExpert: false,
+          expertDetails: null // { title, bio, skills, experience, portfolio, services, rate, availability }
         },
         sparks: [],
         products: [],
@@ -690,6 +745,21 @@
           document.getElementById('avatarPlaceholderIcon').style.display = 'block';
           document.getElementById('editAvatarRemove').style.display = 'none';
         }
+
+        // Update expert modal fields if user is already an expert
+        if (u.isExpert && u.expertDetails) {
+          document.getElementById('expertTitle').value = u.expertDetails.title || '';
+          document.getElementById('expertBio').value = u.expertDetails.bio || '';
+          document.getElementById('expertSkills').value = u.expertDetails.skills ? u.expertDetails.skills.join(', ') :
+            '';
+          document.getElementById('expertExperience').value = u.expertDetails.experience || '';
+          document.getElementById('expertPortfolio').value = u.expertDetails.portfolio || '';
+          document.getElementById('expertServices').value = u.expertDetails.services ? u.expertDetails.services.join(
+            ', ') : '';
+          document.getElementById('expertRate').value = u.expertDetails.rate || '';
+          document.getElementById('expertAvailability').value = u.expertDetails.availability || 'Available';
+        }
+
         saveState();
       }
 
@@ -711,7 +781,7 @@
         });
       }
 
-      // ===== AVATAR UPLOAD (direct on profile) =====
+      // ===== AVATAR UPLOAD =====
       document.getElementById('avatarFileInput').addEventListener('change', async function() {
         const file = this.files[0];
         if (!file) return;
@@ -783,8 +853,7 @@
 
       // ===== EDIT PROFILE MODAL =====
       function openEditModal() {
-        // Load current data into modal
-        renderProfile(); // ensures fields are up to date
+        renderProfile();
         document.getElementById('editProfileModal').classList.add('active');
       }
 
@@ -798,7 +867,6 @@
         if (e.target === this) closeEditModal();
       });
 
-      // Edit modal: avatar upload (preview & crop)
       document.getElementById('editAvatarInput').addEventListener('change', async function() {
         const file = this.files[0];
         if (!file) return;
@@ -831,7 +899,6 @@
         }
       });
 
-      // Edit modal: cover upload
       document.getElementById('editCoverInput').addEventListener('change', function() {
         const file = this.files[0];
         if (!file) return;
@@ -857,7 +924,6 @@
         }
       });
 
-      // Edit modal: skills input (add on Enter)
       document.getElementById('editSkillsInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -874,7 +940,6 @@
         }
       });
 
-      // Save profile from modal
       document.getElementById('saveProfileBtn').addEventListener('click', function() {
         const name = document.getElementById('editName').value.trim();
         if (name) state.user.name = name;
@@ -884,7 +949,6 @@
         if (location) state.user.location = location;
         const bio = document.getElementById('editBio').value.trim();
         if (bio) state.user.bio = bio;
-        // Skills are already updated via the skill tags; but we also read from input if any
         const skillsInput = document.getElementById('editSkillsInput').value.trim();
         if (skillsInput) {
           const extra = skillsInput.split(',').map(s => s.trim()).filter(Boolean);
@@ -898,21 +962,68 @@
         saveState();
       });
 
-      // ===== BECOME AN EXPERT =====
-      function becomeExpert() {
+      // ===== EXPERT APPLICATION =====
+      function openExpertModal() {
         if (state.user.isExpert) {
-          showToast('You are already an expert!', 'info');
+          showToast('You are already an expert! You can update your details.', 'info');
+          // Optionally open edit mode here, but we'll just show the modal with current details
+          document.getElementById('expertModal').classList.add('active');
           return;
         }
-        state.user.isExpert = true;
-        state.user.title = state.user.title || 'Expert';
-        saveState();
-        renderProfile();
-        showToast('🎉 You are now an expert!', 'success');
+        document.getElementById('expertModal').classList.add('active');
+        // Pre-populate from profile fields
+        document.getElementById('expertTitle').value = state.user.title || '';
+        document.getElementById('expertBio').value = state.user.bio || '';
+        document.getElementById('expertSkills').value = state.user.skills ? state.user.skills.join(', ') : '';
       }
 
-      document.getElementById('becomeExpertBtn').addEventListener('click', becomeExpert);
-      document.getElementById('becomeExpertBtn2').addEventListener('click', becomeExpert);
+      function closeExpertModal() {
+        document.getElementById('expertModal').classList.remove('active');
+      }
+
+      document.getElementById('becomeExpertBtn').addEventListener('click', openExpertModal);
+      document.getElementById('becomeExpertBtn2').addEventListener('click', openExpertModal);
+      document.getElementById('expertModalClose').addEventListener('click', closeExpertModal);
+      document.getElementById('expertModal').addEventListener('click', function(e) {
+        if (e.target === this) closeExpertModal();
+      });
+
+      document.getElementById('expertSubmitBtn').addEventListener('click', function() {
+        const title = document.getElementById('expertTitle').value.trim();
+        const bio = document.getElementById('expertBio').value.trim();
+        const skills = document.getElementById('expertSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+        const experience = parseInt(document.getElementById('expertExperience').value);
+        const portfolio = document.getElementById('expertPortfolio').value.trim();
+        const services = document.getElementById('expertServices').value.split(',').map(s => s.trim()).filter(Boolean);
+        const rate = parseFloat(document.getElementById('expertRate').value);
+        const availability = document.getElementById('expertAvailability').value;
+
+        if (!title || !bio || skills.length === 0) {
+          showToast('Please fill in at least Title, Bio, and Skills.', 'error');
+          return;
+        }
+
+        state.user.isExpert = true;
+        state.user.expertDetails = {
+          title,
+          bio,
+          skills,
+          experience: experience || 0,
+          portfolio: portfolio || null,
+          services: services.length ? services : null,
+          rate: rate || 0,
+          availability: availability || 'Available'
+        };
+        // Update main profile fields from expert info
+        state.user.title = title;
+        state.user.bio = bio;
+        state.user.skills = skills;
+
+        renderProfile();
+        closeExpertModal();
+        showToast('🎉 You are now a verified expert!', 'success');
+        saveState();
+      });
 
       // ================================================================
       // PRODUCT MODAL
@@ -957,7 +1068,6 @@
         document.getElementById('productLink').value = '';
         showToast('Product listed successfully!', 'success');
         saveState();
-        // Refresh market grid
         const grid = document.querySelector('.market-grid');
         if (state.products.length === 0) {
           grid.innerHTML =
@@ -1161,16 +1271,22 @@
       });
 
       // ================================================================
-      // COMPOSER (minimal)
+      // COMPOSER
       // ================================================================
       let selectedType = 'text';
       let uploadedFiles = [];
+
+      // Composer modal is already present in the page (hardcoded in HTML).
+      // We'll wire it up.
+      document.getElementById('composerTrigger').addEventListener('click', () => openComposer('text'));
+      document.getElementById('bottomPostBtn').addEventListener('click', () => openComposer('text'));
+      document.getElementById('sidebarPostBtn').addEventListener('click', () => openComposer('text'));
 
       function openComposer(type) {
         selectedType = type || 'text';
         const modal = document.getElementById('composerModal');
         if (!modal) {
-          alert('Composer not ready');
+          // if not exists, create it (but it's already in the HTML)
           return;
         }
         modal.style.display = 'flex';
@@ -1191,102 +1307,77 @@
         if (modal) modal.style.display = 'none';
       }
 
-      // Create composer modal dynamically if it doesn't exist
-      if (!document.getElementById('composerModal')) {
-        const modalHTML = `
-          <div class="modal-overlay" id="composerModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;padding:1rem;">
-            <div class="modal-content" style="background:var(--surface);border-radius:var(--radius-lg);max-width:720px;width:100%;max-height:95vh;overflow-y:auto;padding:1.5rem;position:relative;">
-              <button class="close" id="composerModalClose" style="position:absolute;top:0.75rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">&times;</button>
-              <h3 style="margin-bottom:0.5rem;"><i class="fas fa-bolt" style="color:var(--gold);"></i> What do you want to <span class="text-gradient">Spark</span>?</h3>
-              <div class="composer-types" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:0.5rem;margin:0.75rem 0 1rem;">
-                <button class="type-btn active" data-type="text" style="padding:0.4rem 0.2rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-size:0.65rem;font-weight:500;color:var(--text-secondary);font-family:var(--font);"><i class="fas fa-pen" style="display:block;font-size:1.2rem;margin-bottom:0.2rem;"></i> Text</button>
-                <button class="type-btn" data-type="photo" style="padding:0.4rem 0.2rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-size:0.65rem;font-weight:500;color:var(--text-secondary);font-family:var(--font);"><i class="fas fa-image" style="display:block;font-size:1.2rem;margin-bottom:0.2rem;"></i> Photo</button>
-                <button class="type-btn" data-type="video" style="padding:0.4rem 0.2rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-size:0.65rem;font-weight:500;color:var(--text-secondary);font-family:var(--font);"><i class="fas fa-video" style="display:block;font-size:1.2rem;margin-bottom:0.2rem;"></i> Video</button>
-                <button class="type-btn" data-type="project" style="padding:0.4rem 0.2rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-size:0.65rem;font-weight:500;color:var(--text-secondary);font-family:var(--font);"><i class="fas fa-folder-open" style="display:block;font-size:1.2rem;margin-bottom:0.2rem;"></i> Project</button>
-                <button class="type-btn" data-type="poll" style="padding:0.4rem 0.2rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-size:0.65rem;font-weight:500;color:var(--text-secondary);font-family:var(--font);"><i class="fas fa-poll" style="display:block;font-size:1.2rem;margin-bottom:0.2rem;"></i> Poll</button>
-              </div>
-              <div class="composer-field"><label style="font-weight:600;font-size:var(--text-sm);display:block;margin-bottom:0.2rem;color:var(--text-secondary);">Content</label><textarea class="form-control" id="composerContent" rows="4" placeholder="What's on your mind?" style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:var(--text-base);font-family:var(--font);resize:vertical;min-height:80px;"></textarea></div>
-              <div class="composer-field" id="mediaUploadField" style="display:none;"><label style="font-weight:600;font-size:var(--text-sm);display:block;margin-bottom:0.2rem;color:var(--text-secondary);">Media</label><input type="file" id="composerFileInput" class="form-control" accept="image/*,video/*" style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:var(--text-sm);font-family:var(--font);background:var(--surface);color:var(--text);" /><div class="media-preview" id="mediaPreview" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin:0.5rem 0;"></div></div>
-              <div class="composer-field"><label style="font-weight:600;font-size:var(--text-sm);display:block;margin-bottom:0.2rem;color:var(--text-secondary);">Skills (comma separated)</label><input class="form-control" id="composerSkills" placeholder="e.g., React, UI Design, Python" style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:var(--text-sm);font-family:var(--font);background:var(--surface);color:var(--text);" /></div>
-              <button class="btn btn-primary btn-block" id="composerPublishBtn" style="width:100%;padding:0.7rem;background:var(--gold-gradient);color:var(--text);font-weight:700;font-size:1rem;border:none;border-radius:var(--radius);cursor:pointer;font-family:var(--font);"><i class="fas fa-bolt"></i> Publish Spark</button>
-            </div>
-          </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        // Re-bind events after insertion
-        document.getElementById('composerModalClose').addEventListener('click', closeComposer);
-        document.getElementById('composerModal').addEventListener('click', function(e) {
-          if (e.target === this) closeComposer();
-        });
-        document.getElementById('composerPublishBtn').addEventListener('click', function() {
-          const content = document.getElementById('composerContent').value.trim();
-          if (!content) { showToast('Please add content.', 'warning'); return; }
-          const skills = document.getElementById('composerSkills').value.split(',').map(s => s.trim()).filter(Boolean);
-          const media = [];
-          if (uploadedFiles.length > 0) {
-            const file = uploadedFiles[0];
-            let mediaType = 'file';
-            if (file.type.startsWith('image/')) mediaType = 'image';
-            else if (file.type.startsWith('video/')) mediaType = 'video';
-            media.push({ type: mediaType, url: URL.createObjectURL(file) });
-          }
-          const newSpark = {
-            id: uid(),
-            authorId: state.user.id,
-            author: { name: state.user.name, avatar: state.user.avatar, avatarData: state.user.avatarData,
-              verified: true },
-            type: selectedType,
-            content: content,
-            skills: skills,
-            media: media,
-            likes: 0,
-            comments: 0,
-            time: 'Just now'
-          };
-          state.sparks.unshift(newSpark);
-          renderFeed();
-          closeComposer();
-          showToast('Spark published! 🚀', 'success');
-          saveState();
-        });
-        document.getElementById('composerFileInput').addEventListener('change', function() {
-          const preview = document.getElementById('mediaPreview');
-          preview.innerHTML = '';
-          const files = Array.from(this.files);
-          files.forEach((file, i) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const div = document.createElement('div');
-              div.style.cssText =
-                'position:relative;width:80px;height:80px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2rem;';
-              if (file.type.startsWith('image/')) {
-                div.innerHTML =
-                  `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />`;
-              } else if (file.type.startsWith('video/')) {
-                div.innerHTML =
-                  `<video src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></video>`;
-              } else { div.innerHTML = `<i class="fas fa-file"></i>`; }
-              div.innerHTML +=
-                `<button class="remove" data-index="${i}" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>`;
-              preview.appendChild(div);
-              div.querySelector('.remove').addEventListener('click', function() {
-                const idx = parseInt(this.dataset.index);
-                uploadedFiles = uploadedFiles.filter((_, j) => j !== idx);
-                this.closest('.preview-item').remove();
-              });
-            };
-            reader.readAsDataURL(file);
-            uploadedFiles.push(file);
-          });
-        });
-        document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
-          btn.addEventListener('click', function() { openComposer(this.dataset.type); });
-        });
-      }
+      document.getElementById('composerModalClose').addEventListener('click', closeComposer);
+      document.getElementById('composerModal').addEventListener('click', function(e) {
+        if (e.target === this) closeComposer();
+      });
 
-      document.getElementById('composerTrigger').addEventListener('click', () => openComposer('text'));
-      document.getElementById('bottomPostBtn').addEventListener('click', () => openComposer('text'));
-      document.getElementById('sidebarPostBtn').addEventListener('click', () => openComposer('text'));
+      document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
+        btn.addEventListener('click', function() { openComposer(this.dataset.type); });
+      });
+
+      document.getElementById('composerFileInput').addEventListener('change', function() {
+        const preview = document.getElementById('mediaPreview');
+        preview.innerHTML = '';
+        const files = Array.from(this.files);
+        files.forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.style.cssText =
+              'position:relative;width:80px;height:80px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2rem;';
+            if (file.type.startsWith('image/')) {
+              div.innerHTML =
+                `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />`;
+            } else if (file.type.startsWith('video/')) {
+              div.innerHTML =
+                `<video src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></video>`;
+            } else { div.innerHTML = `<i class="fas fa-file"></i>`; }
+            div.innerHTML +=
+              `<button class="remove" data-index="${i}" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>`;
+            preview.appendChild(div);
+            div.querySelector('.remove').addEventListener('click', function() {
+              const idx = parseInt(this.dataset.index);
+              uploadedFiles = uploadedFiles.filter((_, j) => j !== idx);
+              this.closest('.preview-item').remove();
+            });
+          };
+          reader.readAsDataURL(file);
+          uploadedFiles.push(file);
+        });
+      });
+
+      document.getElementById('composerPublishBtn').addEventListener('click', function() {
+        const content = document.getElementById('composerContent').value.trim();
+        if (!content) { showToast('Please add content.', 'warning'); return; }
+        const skills = document.getElementById('composerSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+        const media = [];
+        if (uploadedFiles.length > 0) {
+          const file = uploadedFiles[0];
+          let mediaType = 'file';
+          if (file.type.startsWith('image/')) mediaType = 'image';
+          else if (file.type.startsWith('video/')) mediaType = 'video';
+          media.push({ type: mediaType, url: URL.createObjectURL(file) });
+        }
+        const newSpark = {
+          id: uid(),
+          authorId: state.user.id,
+          author: { name: state.user.name, avatar: state.user.avatar, avatarData: state.user.avatarData,
+            verified: true },
+          type: selectedType,
+          content: content,
+          skills: skills,
+          media: media,
+          likes: 0,
+          comments: 0,
+          time: 'Just now'
+        };
+        state.sparks.unshift(newSpark);
+        renderFeed();
+        closeComposer();
+        showToast('Spark published! 🚀', 'success');
+        saveState();
+      });
 
       // ================================================================
       // KEYBOARD SHORTCUT
@@ -1315,7 +1406,7 @@
       renderProfile();
       navigateTo('profile');
       window.addEventListener('beforeunload', saveState);
-      console.log('🚀 SkiloraX with full profile editor ready!');
+      console.log('🚀 SkiloraX with expert onboarding ready!');
     })();
   </script>
 </body>
