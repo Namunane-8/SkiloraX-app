@@ -8,8 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ============================================================
-       SKILORAX — PRODUCTION PLATFORM
-       Built in Africa. Designed for the World.
+       SKILORAX — PRODUCTION PLATFORM (CLEAN UI)
        ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -213,6 +212,13 @@
     .community-card .header h3, .opportunity-card .header h3 { font-weight: 700; font-size: var(--text-lg); }
     .community-card .meta, .opportunity-card .meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0.25rem 0; }
     .community-card .actions, .opportunity-card .actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    /* Settings tabs */
+    .settings-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .settings-tab { padding: 0.4rem 1rem; border-radius: var(--radius-full); cursor: pointer; font-weight: 500; color: var(--text-secondary); transition: var(--transition); border: none; background: none; font-family: var(--font); font-size: var(--text-sm); }
+    .settings-tab:hover { background: var(--bg); }
+    .settings-tab.active { background: var(--gold-light); color: var(--gold-dark); }
+    .settings-section { display: none; }
+    .settings-section.active { display: block; }
     @media (max-width: 1024px) { .main { padding: 1.25rem; } }
     @media (max-width: 768px) {
       .sidebar-toggle { display: block; }
@@ -417,11 +423,90 @@
       <!-- ===== PAGE: SETTINGS ===== -->
       <section id="page-settings" class="page hidden">
         <div class="page-header"><h1>Settings</h1><p>Manage your account and preferences.</p></div>
-        <div class="card" style="max-width:600px;">
-          <div class="form-group"><label class="form-label">Display Name</label><input class="form-control" id="settingsName" value="SkiloraX User" /></div>
-          <div class="form-group"><label class="form-label">Username</label><input class="form-control" id="settingsUsername" value="skilorax_user" /></div>
-          <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="settingsEmail" value="user@skilorax.com" type="email" /></div>
-          <button class="btn btn-primary" id="settingsSave"><i class="fas fa-save"></i> Save Settings</button>
+        <div class="settings-tabs" id="settingsTabs">
+          <button class="settings-tab active" data-tab="profile">Profile</button>
+          <button class="settings-tab" data-tab="privacy">Privacy</button>
+          <button class="settings-tab" data-tab="notifications">Notifications</button>
+          <button class="settings-tab" data-tab="appearance">Appearance</button>
+        </div>
+
+        <!-- Profile Settings -->
+        <div class="settings-section active" id="settings-profile">
+          <div class="card" style="max-width:600px;">
+            <div class="form-group"><label class="form-label">Display Name</label><input class="form-control" id="settingsName" value="SkiloraX User" /></div>
+            <div class="form-group"><label class="form-label">Username</label><input class="form-control" id="settingsUsername" value="skilorax_user" /></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-control" id="settingsEmail" value="user@skilorax.com" type="email" /></div>
+            <div class="form-group"><label class="form-label">Bio</label><textarea class="form-control" id="settingsBio" rows="3" placeholder="Tell us about yourself"></textarea></div>
+            <button class="btn btn-primary" id="settingsSave"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section" id="settings-privacy">
+          <div class="card" style="max-width:600px;">
+            <div class="form-group"><label class="form-label">Profile Visibility</label>
+              <select class="form-control" id="privacyProfile">
+                <option value="public">Public</option>
+                <option value="connections">Connections Only</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Activity Status</label>
+              <select class="form-control" id="privacyActivity">
+                <option value="online">Show when online</option>
+                <option value="offline">Hide online status</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Data Sharing</label>
+              <select class="form-control" id="privacyData">
+                <option value="limited">Limited (recommended)</option>
+                <option value="standard">Standard</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="privacySave"><i class="fas fa-save"></i> Save Privacy</button>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-section" id="settings-notifications">
+          <div class="card" style="max-width:600px;">
+            <div class="form-group">
+              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="notifLikes" checked /> Likes
+              </label>
+              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="notifComments" checked /> Comments
+              </label>
+              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="notifFollows" checked /> Follows
+              </label>
+              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="notifMessages" checked /> Messages
+              </label>
+            </div>
+            <button class="btn btn-primary" id="notifSave"><i class="fas fa-save"></i> Save Preferences</button>
+          </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="settings-section" id="settings-appearance">
+          <div class="card" style="max-width:600px;">
+            <div class="form-group"><label class="form-label">Theme</label>
+              <select class="form-control" id="appearanceTheme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">System Default</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Font Size</label>
+              <select class="form-control" id="appearanceFont">
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="appearanceSave"><i class="fas fa-save"></i> Save Appearance</button>
+          </div>
         </div>
       </section>
 
@@ -454,7 +539,7 @@
     </div>
   </div>
 
-  <!-- ===== PRODUCT MODAL (Multi-Currency) ===== -->
+  <!-- ===== PRODUCT MODAL ===== -->
   <div class="modal-overlay" id="productModal">
     <div class="modal-content">
       <button class="close" id="productModalClose">&times;</button>
@@ -547,11 +632,11 @@
     </div>
   </div>
 
-  <!-- ===== COMMUNITY MODAL ===== -->
+  <!-- ===== COMMUNITY MODAL (Group/Page) ===== -->
   <div class="modal-overlay" id="communityModal">
     <div class="modal-content">
       <button class="close" id="communityModalClose">&times;</button>
-      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-users" style="color:var(--gold);"></i> Create a Community</h3>
+      <h3 style="margin-bottom:0.5rem;"><i class="fas fa-users" style="color:var(--gold);"></i> Create Community</h3>
       <div class="form-group">
         <label class="form-label">Community Name</label>
         <input class="form-control" id="communityName" placeholder="e.g., React Developers Africa" />
@@ -559,6 +644,13 @@
       <div class="form-group">
         <label class="form-label">Description</label>
         <textarea class="form-control" id="communityDesc" rows="3" placeholder="What is this community about?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-control" id="communityType">
+          <option value="group">Group – open discussions</option>
+          <option value="page">Page – broadcast updates</option>
+        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Category</label>
@@ -610,7 +702,10 @@
         communities: [],
         notifications: [],
         chats: [],
-        currentPage: 'feed'
+        currentPage: 'feed',
+        // For Explore/Experts dynamic actions
+        follows: {}, // userId -> true/false
+        joinedCommunities: {} // communityId -> true/false
       };
 
       // ================================================================
@@ -910,27 +1005,43 @@
         this.value = '';
       });
 
-      // ----- EXPLORE -----
+      // ----- EXPLORE (dynamic with follow/unfollow) -----
       function renderExplore() {
         const grid = document.getElementById('exploreGrid');
         const people = [
-          { name: 'Sarah Chen', avatar: 'SC', title: 'UX Designer', skills: ['Figma', 'UI Design'] },
-          { name: 'Marcus Rivera', avatar: 'MR', title: 'Data Scientist', skills: ['Python', 'ML'] },
-          { name: 'Priya Patel', avatar: 'PP', title: 'Product Manager', skills: ['Agile', 'Strategy'] },
-          { name: 'James Kim', avatar: 'JK', title: 'DevOps Engineer', skills: ['AWS', 'Kubernetes'] },
+          { id: 'p1', name: 'Sarah Chen', avatar: 'SC', title: 'UX Designer', skills: ['Figma', 'UI Design'] },
+          { id: 'p2', name: 'Marcus Rivera', avatar: 'MR', title: 'Data Scientist', skills: ['Python', 'ML'] },
+          { id: 'p3', name: 'Priya Patel', avatar: 'PP', title: 'Product Manager', skills: ['Agile', 'Strategy'] },
+          { id: 'p4', name: 'James Kim', avatar: 'JK', title: 'DevOps Engineer', skills: ['AWS', 'Kubernetes'] },
         ];
-        grid.innerHTML = people.map(p => `
-          <div class="discover-card">
-            <div class="avatar" style="margin:0 auto 0.5rem;">${p.avatar}</div>
-            <div class="name">${p.name}</div>
-            <div class="title">${p.title}</div>
-            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;justify-content:center;margin:0.5rem 0;">${p.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
-            <button class="btn btn-primary btn-sm" style="margin-top:0.5rem;" onclick="showToast('Followed ${p.name}!','success'); this.textContent='✓ Following';this.disabled=true;">Follow</button>
-          </div>
-        `).join('');
+        grid.innerHTML = people.map(p => {
+          const isFollowing = state.follows[p.id] || false;
+          return `
+            <div class="discover-card">
+              <div class="avatar" style="margin:0 auto 0.5rem;">${p.avatar}</div>
+              <div class="name">${p.name}</div>
+              <div class="title">${p.title}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.25rem;justify-content:center;margin:0.5rem 0;">${p.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
+              <button class="btn ${isFollowing ? 'btn-secondary' : 'btn-primary'} btn-sm" style="margin-top:0.5rem;" data-action="follow" data-id="${p.id}">
+                ${isFollowing ? '✓ Following' : 'Follow'}
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        // Follow/unfollow logic
+        grid.querySelectorAll('[data-action="follow"]').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            state.follows[id] = !state.follows[id];
+            renderExplore();
+            showToast(state.follows[id] ? 'Followed!' : 'Unfollowed', 'info');
+            saveState();
+          });
+        });
       }
 
-      // ----- EXPERTS -----
+      // ----- EXPERTS (dynamic booking) -----
       function renderExperts() {
         const grid = document.getElementById('expertsGrid');
         const experts = [
@@ -957,13 +1068,18 @@
             <div class="footer">
               <div><span class="price">$${e.price}</span> <span style="color:var(--text-muted);font-size:var(--text-sm);">/ session</span></div>
               <span class="badge badge-green">Available</span>
-              <button class="btn btn-primary btn-sm" onclick="showToast('Booking request sent to ${e.name}!','success');"><i class="fas fa-calendar-plus"></i> Book</button>
+              <button class="btn btn-primary btn-sm book-expert" data-name="${e.name}"><i class="fas fa-calendar-plus"></i> Book</button>
             </div>
           </div>
         `).join('');
+        grid.querySelectorAll('.book-expert').forEach(btn => {
+          btn.addEventListener('click', function() {
+            showToast(`Booking request sent to ${this.dataset.name}!`, 'success');
+          });
+        });
       }
 
-      // ----- MARKET (Products with multi-currency) -----
+      // ----- MARKET -----
       function renderMarket() {
         const grid = document.getElementById('marketGrid');
         if (state.products.length === 0) {
@@ -993,7 +1109,7 @@
         `).join('');
       }
 
-      // ----- CHAT -----
+      // ----- CHAT, NOTIFICATIONS, PROFILE, OPPORTUNITIES, COMMUNITIES -----
       function renderChat() {
         const list = document.getElementById('chatList');
         list.innerHTML = `
@@ -1004,7 +1120,6 @@
         `;
       }
 
-      // ----- NOTIFICATIONS -----
       function renderNotifications() {
         const container = document.getElementById('notificationsContainer');
         if (state.notifications.length === 0) {
@@ -1029,12 +1144,13 @@
             const id = this.dataset.id;
             const notif = state.notifications.find(n => n.id === id);
             if (notif) { notif.read = true;
-              renderNotifications(); }
+              renderNotifications();
+              updateBadges();
+              saveState(); }
           });
         });
       }
 
-      // ----- PROFILE -----
       function renderProfile() {
         const u = state.user;
         const avatarEl = document.querySelectorAll('.user-avatar');
@@ -1060,7 +1176,6 @@
         }
       }
 
-      // ----- OPPORTUNITIES -----
       function renderOpportunities() {
         const grid = document.getElementById('opportunitiesGrid');
         if (state.opportunities.length === 0) {
@@ -1092,7 +1207,6 @@
         `).join('');
       }
 
-      // ----- COMMUNITIES -----
       function renderCommunities() {
         const grid = document.getElementById('communitiesGrid');
         if (state.communities.length === 0) {
@@ -1104,20 +1218,45 @@
           `;
           return;
         }
-        grid.innerHTML = state.communities.map(c => `
-          <div class="community-card">
-            <div class="header">
-              <h3>${c.name}</h3>
-              <span class="badge badge-purple">${c.category}</span>
+        grid.innerHTML = state.communities.map(c => {
+          const isJoined = state.joinedCommunities[c.id] || false;
+          const typeLabel = c.type === 'group' ? 'Group' : 'Page';
+          return `
+            <div class="community-card card">
+              <div class="header">
+                <h3>${c.name}</h3>
+                <span class="badge badge-purple">${c.category}</span>
+                <span class="badge badge-blue" style="font-size:0.6rem;">${typeLabel}</span>
+              </div>
+              <div class="meta">${c.members || 0} ${c.type === 'group' ? 'members' : 'followers'} · Created by ${c.creator}</div>
+              <p style="color:var(--text-secondary); margin:0.5rem 0;">${c.description}</p>
+              <div class="actions">
+                <button class="btn ${isJoined ? 'btn-secondary' : 'btn-primary'} btn-sm" data-action="join" data-id="${c.id}">
+                  ${isJoined ? '✓ Joined' : (c.type === 'group' ? 'Join Group' : 'Follow Page')}
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Following ${c.name}','success');"><i class="fas fa-bell"></i> Follow</button>
+              </div>
             </div>
-            <div class="meta">${c.members || 0} members · Created by ${c.creator}</div>
-            <p style="color:var(--text-secondary); margin:0.5rem 0;">${c.description}</p>
-            <div class="actions">
-              <button class="btn btn-primary btn-sm" onclick="showToast('Joined ${c.name}!','success'); this.textContent='✓ Joined';this.disabled=true;"><i class="fas fa-user-plus"></i> Join</button>
-              <button class="btn btn-secondary btn-sm" onclick="showToast('Following ${c.name}','success');"><i class="fas fa-bell"></i> Follow</button>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
+        // Join/Leave logic
+        grid.querySelectorAll('[data-action="join"]').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            state.joinedCommunities[id] = !state.joinedCommunities[id];
+            renderCommunities();
+            showToast(state.joinedCommunities[id] ? 'Joined!' : 'Left', 'info');
+            saveState();
+          });
+        });
+      }
+
+      // ================================================================
+      // UPDATE BADGE COUNTS
+      // ================================================================
+      function updateBadges() {
+        const notifCount = state.notifications.filter(n => !n.read).length;
+        document.querySelectorAll('.badge-red').forEach(el => el.textContent = notifCount);
       }
 
       // ================================================================
@@ -1247,7 +1386,7 @@
       });
 
       // ================================================================
-      // PRODUCT MODAL (Multi-Currency)
+      // PRODUCT MODAL
       // ================================================================
       const currencySymbols = {
         USD: '$',
@@ -1354,7 +1493,7 @@
       });
 
       // ================================================================
-      // COMMUNITY MODAL
+      // COMMUNITY MODAL (Group/Page)
       // ================================================================
       document.getElementById('showCommunityModal').addEventListener('click', function() {
         document.getElementById('communityModal').classList.add('active');
@@ -1369,6 +1508,7 @@
       document.getElementById('communityPublishBtn').addEventListener('click', function() {
         const name = document.getElementById('communityName').value.trim();
         const desc = document.getElementById('communityDesc').value.trim();
+        const type = document.getElementById('communityType').value;
         const category = document.getElementById('communityCategory').value;
         if (!name || !desc) {
           showToast('Please fill in all fields.', 'error');
@@ -1378,6 +1518,7 @@
           id: uid(),
           name,
           description: desc,
+          type: type,
           category,
           members: 1,
           creator: state.user.name,
@@ -1439,6 +1580,65 @@
       });
 
       // ================================================================
+      // SETTINGS TABS
+      // ================================================================
+      document.querySelectorAll('.settings-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const target = this.dataset.tab;
+          document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+          document.getElementById(`settings-${target}`).classList.add('active');
+        });
+      });
+
+      // ================================================================
+      // SETTINGS ACTIONS
+      // ================================================================
+      document.getElementById('settingsSave').addEventListener('click', function() {
+        const name = document.getElementById('settingsName').value.trim();
+        if (name) state.user.name = name;
+        const username = document.getElementById('settingsUsername').value.trim();
+        if (username) state.user.username = username;
+        const email = document.getElementById('settingsEmail').value.trim();
+        if (email) state.user.email = email;
+        const bio = document.getElementById('settingsBio').value.trim();
+        if (bio) state.user.bio = bio;
+        state.user.avatar = getInitials(state.user.name);
+        renderProfile();
+        document.querySelectorAll('.user-avatar').forEach(el => {
+          if (state.user.avatarData) {
+            el.innerHTML =
+              `<img src="${state.user.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
+          } else {
+            el.textContent = state.user.avatar;
+          }
+        });
+        showToast('Settings saved!', 'success');
+        saveState();
+      });
+
+      document.getElementById('privacySave').addEventListener('click', function() {
+        showToast('Privacy settings saved!', 'success');
+      });
+
+      document.getElementById('notifSave').addEventListener('click', function() {
+        showToast('Notification preferences saved!', 'success');
+      });
+
+      document.getElementById('appearanceSave').addEventListener('click', function() {
+        const theme = document.getElementById('appearanceTheme').value;
+        if (theme === 'dark') {
+          document.body.style.background = '#1a1a2e';
+          document.body.style.color = '#fff';
+        } else {
+          document.body.style.background = '';
+          document.body.style.color = '';
+        }
+        showToast('Appearance saved!', 'success');
+      });
+
+      // ================================================================
       // LOGOUT
       // ================================================================
       document.getElementById('logoutBtn').addEventListener('click', function(e) {
@@ -1451,7 +1651,7 @@
       });
 
       // ================================================================
-      // PROFILE EDIT
+      // PROFILE EDIT (quick)
       // ================================================================
       document.getElementById('editProfileBtn').addEventListener('click', function() {
         const u = state.user;
@@ -1479,30 +1679,6 @@
       });
 
       // ================================================================
-      // SETTINGS SAVE
-      // ================================================================
-      document.getElementById('settingsSave').addEventListener('click', function() {
-        const name = document.getElementById('settingsName').value.trim();
-        if (name) state.user.name = name;
-        const username = document.getElementById('settingsUsername').value.trim();
-        if (username) state.user.username = username;
-        const email = document.getElementById('settingsEmail').value.trim();
-        if (email) state.user.email = email;
-        state.user.avatar = getInitials(state.user.name);
-        renderProfile();
-        document.querySelectorAll('.user-avatar').forEach(el => {
-          if (state.user.avatarData) {
-            el.innerHTML =
-              `<img src="${state.user.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
-          } else {
-            el.textContent = state.user.avatar;
-          }
-        });
-        showToast('Settings saved!', 'success');
-        saveState();
-      });
-
-      // ================================================================
       // EXPLORE SEARCH
       // ================================================================
       document.getElementById('exploreSearchBtn').addEventListener('click', function() {
@@ -1513,7 +1689,6 @@
             s.skills.some(sk => sk.toLowerCase().includes(q.toLowerCase()))
           );
           showToast(`Found ${results.length} Sparks matching "${q}"`, 'info');
-          // Optional: could render results in explore grid
         } else {
           showToast('Enter a search term.', 'warning');
         }
@@ -1537,18 +1712,9 @@
       });
 
       // ================================================================
-      // UPDATE BADGE COUNTS
-      // ================================================================
-      function updateBadges() {
-        const notifCount = state.notifications.filter(n => !n.read).length;
-        document.querySelectorAll('.badge-red').forEach(el => el.textContent = notifCount);
-      }
-
-      // ================================================================
       // INIT
       // ================================================================
       if (!loadState()) {
-        // Set default user
         state.user.name = 'SkiloraX User';
         state.user.avatar = 'SK';
         state.user.title = 'Professional';
@@ -1560,7 +1726,6 @@
       updateBadges();
       window.addEventListener('beforeunload', saveState);
       console.log('🚀 SkiloraX Production Platform ready!');
-      console.log('📊 All data stored in localStorage.');
     })();
   </script>
 </body>
