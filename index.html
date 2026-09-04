@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ============================================================
-       SKILORAX — PRODUCTION PLATFORM (CLEAN UI)
+       SKILORAX — PRODUCTION PLATFORM
        ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -62,6 +62,7 @@
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-blue { background: #dbeafe; color: #1e40af; }
     .badge-purple { background: var(--purple-light); color: var(--purple); }
+    .badge-payment { background: #e0f2fe; color: #0369a1; font-size: 0.6rem; }
     .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--text-lg); background: var(--gold-light); color: var(--gold-dark); flex-shrink: 0; overflow: hidden; }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .avatar-sm { width: 32px; height: 32px; font-size: var(--text-sm); }
@@ -163,9 +164,13 @@
     .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1.25rem; }
     .product-card .image { font-size: 2.5rem; text-align: center; padding: 1.5rem 0; background: var(--bg); border-radius: var(--radius); margin-bottom: 0.5rem; }
     .product-card .name { font-weight: 700; }
-    .product-card .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 1px solid var(--border); margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+    .product-card .desc { font-size: var(--text-sm); color: var(--text-secondary); margin: 0.25rem 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-card .footer { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); margin-top: 0.5rem; }
+    .product-card .footer .price-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
     .product-card .footer .price { font-weight: 700; font-size: var(--text-lg); }
-    .product-card .footer .currency { font-size: var(--text-sm); color: var(--text-muted); }
+    .product-card .footer .payment-badges { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .product-card .footer .payment-badges .badge-payment { font-size: 0.55rem; padding: 0.05rem 0.4rem; }
+    .product-card .footer .external-link { font-size: var(--text-sm); color: var(--purple); word-break: break-all; }
     .notif-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius); border-bottom: 1px solid var(--border); }
     .notif-item:last-child { border-bottom: none; }
     .notif-item.unread { background: var(--gold-light); margin: 0 -0.75rem; padding: 0.6rem 0.75rem; }
@@ -212,13 +217,17 @@
     .community-card .header h3, .opportunity-card .header h3 { font-weight: 700; font-size: var(--text-lg); }
     .community-card .meta, .opportunity-card .meta { font-size: var(--text-sm); color: var(--text-secondary); margin: 0.25rem 0; }
     .community-card .actions, .opportunity-card .actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
-    /* Settings tabs */
     .settings-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
     .settings-tab { padding: 0.4rem 1rem; border-radius: var(--radius-full); cursor: pointer; font-weight: 500; color: var(--text-secondary); transition: var(--transition); border: none; background: none; font-family: var(--font); font-size: var(--text-sm); }
     .settings-tab:hover { background: var(--bg); }
     .settings-tab.active { background: var(--gold-light); color: var(--gold-dark); }
     .settings-section { display: none; }
     .settings-section.active { display: block; }
+    .empty-state { text-align: center; padding: 3rem 2rem; }
+    .empty-state i { font-size: 3rem; color: var(--gold); margin-bottom: 1rem; }
+    .empty-state h3 { font-size: var(--text-xl); font-weight: 700; margin-bottom: 0.5rem; }
+    .empty-state p { color: var(--text-secondary); max-width: 400px; margin: 0 auto 1.5rem; }
+    .empty-state .btn { margin: 0 auto; }
     @media (max-width: 1024px) { .main { padding: 1.25rem; } }
     @media (max-width: 768px) {
       .sidebar-toggle { display: block; }
@@ -252,6 +261,7 @@
     }
     *:focus-visible { outline: 3px solid #fbbf24; outline-offset: 2px; }
     .currency-badge { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 4px; font-size: 0.6rem; font-weight: 600; background: var(--gold-light); color: var(--gold-dark); }
+    .payment-badge { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.05rem 0.4rem; border-radius: 4px; font-size: 0.6rem; font-weight: 500; background: #e0f2fe; color: #0369a1; }
   </style>
 </head>
 <body>
@@ -331,20 +341,34 @@
         </div>
       </section>
 
-      <!-- ===== PAGE: EXPLORE ===== -->
+      <!-- ===== PAGE: EXPLORE (EMPTY + UPLOAD) ===== -->
       <section id="page-explore" class="page hidden">
         <div class="page-header"><h1>Explore <span class="text-gradient">Sparks</span></h1><p>Discover people, skills, projects, and opportunities.</p></div>
         <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
           <input class="form-control" style="flex:1; min-width:180px;" placeholder="Search skills, people, topics…" id="exploreSearch" />
           <button class="btn btn-primary" id="exploreSearchBtn"><i class="fas fa-search"></i> Search</button>
         </div>
-        <div class="discover-grid" id="exploreGrid"></div>
+        <div id="exploreGrid">
+          <div class="empty-state">
+            <i class="fas fa-compass"></i>
+            <h3>No content yet</h3>
+            <p>Be the first to share something amazing! Upload a Spark, project, or skill showcase.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('composerTrigger').click();"><i class="fas fa-plus"></i> Create a Spark</button>
+          </div>
+        </div>
       </section>
 
-      <!-- ===== PAGE: EXPERTS ===== -->
+      <!-- ===== PAGE: EXPERTS (EMPTY + UPLOAD) ===== -->
       <section id="page-experts" class="page hidden">
         <div class="page-header"><h1>Find <span class="text-gradient">Experts</span></h1><p>Connect with professionals and view their work.</p></div>
-        <div id="expertsGrid" class="experts-grid"></div>
+        <div id="expertsGrid">
+          <div class="empty-state">
+            <i class="fas fa-user-tie"></i>
+            <h3>No experts yet</h3>
+            <p>Are you an expert? Share your skills and connect with professionals.</p>
+            <button class="btn btn-primary" onclick="showToast('Expert profile creation coming soon!','info');"><i class="fas fa-plus"></i> Become an Expert</button>
+          </div>
+        </div>
       </section>
 
       <!-- ===== PAGE: MARKET ===== -->
@@ -430,7 +454,6 @@
           <button class="settings-tab" data-tab="appearance">Appearance</button>
         </div>
 
-        <!-- Profile Settings -->
         <div class="settings-section active" id="settings-profile">
           <div class="card" style="max-width:600px;">
             <div class="form-group"><label class="form-label">Display Name</label><input class="form-control" id="settingsName" value="SkiloraX User" /></div>
@@ -441,7 +464,6 @@
           </div>
         </div>
 
-        <!-- Privacy Settings -->
         <div class="settings-section" id="settings-privacy">
           <div class="card" style="max-width:600px;">
             <div class="form-group"><label class="form-label">Profile Visibility</label>
@@ -457,38 +479,22 @@
                 <option value="offline">Hide online status</option>
               </select>
             </div>
-            <div class="form-group"><label class="form-label">Data Sharing</label>
-              <select class="form-control" id="privacyData">
-                <option value="limited">Limited (recommended)</option>
-                <option value="standard">Standard</option>
-              </select>
-            </div>
             <button class="btn btn-primary" id="privacySave"><i class="fas fa-save"></i> Save Privacy</button>
           </div>
         </div>
 
-        <!-- Notification Settings -->
         <div class="settings-section" id="settings-notifications">
           <div class="card" style="max-width:600px;">
             <div class="form-group">
-              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
-                <input type="checkbox" id="notifLikes" checked /> Likes
-              </label>
-              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
-                <input type="checkbox" id="notifComments" checked /> Comments
-              </label>
-              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
-                <input type="checkbox" id="notifFollows" checked /> Follows
-              </label>
-              <label class="form-label" style="display:flex; align-items:center; gap:0.5rem;">
-                <input type="checkbox" id="notifMessages" checked /> Messages
-              </label>
+              <label style="display:flex; align-items:center; gap:0.5rem;"><input type="checkbox" checked /> Likes</label>
+              <label style="display:flex; align-items:center; gap:0.5rem;"><input type="checkbox" checked /> Comments</label>
+              <label style="display:flex; align-items:center; gap:0.5rem;"><input type="checkbox" checked /> Follows</label>
+              <label style="display:flex; align-items:center; gap:0.5rem;"><input type="checkbox" checked /> Messages</label>
             </div>
             <button class="btn btn-primary" id="notifSave"><i class="fas fa-save"></i> Save Preferences</button>
           </div>
         </div>
 
-        <!-- Appearance Settings -->
         <div class="settings-section" id="settings-appearance">
           <div class="card" style="max-width:600px;">
             <div class="form-group"><label class="form-label">Theme</label>
@@ -496,13 +502,6 @@
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
                 <option value="system">System Default</option>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">Font Size</label>
-              <select class="form-control" id="appearanceFont">
-                <option value="small">Small</option>
-                <option value="medium" selected>Medium</option>
-                <option value="large">Large</option>
               </select>
             </div>
             <button class="btn btn-primary" id="appearanceSave"><i class="fas fa-save"></i> Save Appearance</button>
@@ -539,7 +538,7 @@
     </div>
   </div>
 
-  <!-- ===== PRODUCT MODAL ===== -->
+  <!-- ===== PRODUCT MODAL (with External Link & Payment Methods) ===== -->
   <div class="modal-overlay" id="productModal">
     <div class="modal-content">
       <button class="close" id="productModalClose">&times;</button>
@@ -581,6 +580,23 @@
           <option value="Event">Event</option>
           <option value="Course">Course</option>
         </select>
+      </div>
+      <!-- External Link -->
+      <div class="form-group">
+        <label class="form-label">External Link (optional)</label>
+        <input class="form-control" id="productLink" placeholder="https://yourstore.com/product" />
+        <small style="color:var(--text-muted); font-size:0.7rem;">Add a direct link to your product page, checkout, or website.</small>
+      </div>
+      <!-- Payment Methods -->
+      <div class="form-group">
+        <label class="form-label">Payment Methods Accepted</label>
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.25rem;">
+          <label style="display:flex; align-items:center; gap:0.3rem; font-size:var(--text-sm);"><input type="checkbox" class="payment-method" value="Paystack" /> Paystack</label>
+          <label style="display:flex; align-items:center; gap:0.3rem; font-size:var(--text-sm);"><input type="checkbox" class="payment-method" value="M-Pesa" /> M-Pesa</label>
+          <label style="display:flex; align-items:center; gap:0.3rem; font-size:var(--text-sm);"><input type="checkbox" class="payment-method" value="PayPal" /> PayPal</label>
+          <label style="display:flex; align-items:center; gap:0.3rem; font-size:var(--text-sm);"><input type="checkbox" class="payment-method" value="Stripe" /> Stripe</label>
+          <label style="display:flex; align-items:center; gap:0.3rem; font-size:var(--text-sm);"><input type="checkbox" class="payment-method" value="Flutterwave" /> Flutterwave</label>
+        </div>
       </div>
       <button class="btn btn-primary btn-block" id="productPublishBtn"><i class="fas fa-plus"></i> List Product</button>
     </div>
@@ -632,7 +648,7 @@
     </div>
   </div>
 
-  <!-- ===== COMMUNITY MODAL (Group/Page) ===== -->
+  <!-- ===== COMMUNITY MODAL ===== -->
   <div class="modal-overlay" id="communityModal">
     <div class="modal-content">
       <button class="close" id="communityModalClose">&times;</button>
@@ -703,9 +719,8 @@
         notifications: [],
         chats: [],
         currentPage: 'feed',
-        // For Explore/Experts dynamic actions
-        follows: {}, // userId -> true/false
-        joinedCommunities: {} // communityId -> true/false
+        follows: {},
+        joinedCommunities: {}
       };
 
       // ================================================================
@@ -823,7 +838,6 @@
       function buildSparkHTML(s) {
         const isOwn = s.authorId === state.user.id;
         const isPoll = s.type === 'poll' && s.pollOptions;
-
         let mediaHTML = '';
         if (s.media && s.media.length) {
           const m = s.media[0];
@@ -831,9 +845,8 @@
             mediaHTML =
               `<div class="spark-media"><img src="${m.url || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22200%22%3E%3Crect width=%22300%22 height=%22200%22 fill=%22%23f1f5f9%22/%3E%3Ctext x=%22150%22 y=%22110%22 text-anchor=%22middle%22 fill=%22%2394a3b8%22 font-family=%22sans-serif%22 font-size=%2220%22%3E📷 Image%3C/text%3E%3C/svg%3E'}" alt="Spark media" /></div>`;
           } else if (m.type === 'video') {
-            mediaHTML = `
-              <div class="spark-media"><div style="position:relative;padding-bottom:56.25%;background:#0a0a0a;"><video controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a0a;"><source src="${m.url || '#'}" type="video/mp4" /></video></div></div>
-            `;
+            mediaHTML =
+              `<div class="spark-media"><div style="position:relative;padding-bottom:56.25%;background:#0a0a0a;"><video controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a0a;"><source src="${m.url || '#'}" type="video/mp4" /></video></div></div>`;
           } else {
             mediaHTML =
               `<div class="spark-media"><div class="media-placeholder"><i class="fas fa-file"></i><p>Media attached</p></div></div>`;
@@ -876,21 +889,11 @@
               ${mediaHTML}
             </div>
             <div class="spark-actions">
-              <button class="action ${s.liked ? 'liked' : ''}" data-action="like" data-id="${s.id}">
-                <i class="fas fa-heart"></i> <span class="count">${s.likes}</span>
-              </button>
-              <button class="action" data-action="comment" data-id="${s.id}">
-                <i class="fas fa-comment"></i> <span class="count">${s.comments}</span>
-              </button>
-              <button class="action ${s.reSpark ? 're-sparked' : ''}" data-action="reSpark" data-id="${s.id}">
-                <i class="fas fa-retweet"></i> <span class="count">${s.reSparks}</span>
-              </button>
-              <button class="action" data-action="share" data-id="${s.id}">
-                <i class="fas fa-share"></i>
-              </button>
-              <button class="action" data-action="save" data-id="${s.id}">
-                <i class="fas ${s.saved ? 'fa-bookmark' : 'fa-bookmark'}" style="${s.saved ? 'color:var(--gold-dark);' : ''}"></i>
-              </button>
+              <button class="action ${s.liked ? 'liked' : ''}" data-action="like" data-id="${s.id}"><i class="fas fa-heart"></i> <span class="count">${s.likes}</span></button>
+              <button class="action" data-action="comment" data-id="${s.id}"><i class="fas fa-comment"></i> <span class="count">${s.comments}</span></button>
+              <button class="action ${s.reSpark ? 're-sparked' : ''}" data-action="reSpark" data-id="${s.id}"><i class="fas fa-retweet"></i> <span class="count">${s.reSparks}</span></button>
+              <button class="action" data-action="share" data-id="${s.id}"><i class="fas fa-share"></i></button>
+              <button class="action" data-action="save" data-id="${s.id}"><i class="fas ${s.saved ? 'fa-bookmark' : 'fa-bookmark'}" style="${s.saved ? 'color:var(--gold-dark);' : ''}"></i></button>
               ${isOwn ? `<button class="action" data-action="delete" data-id="${s.id}" style="color:var(--text-muted);"><i class="fas fa-trash"></i></button>` : ''}
             </div>
           </div>
@@ -1005,81 +1008,33 @@
         this.value = '';
       });
 
-      // ----- EXPLORE (dynamic with follow/unfollow) -----
+      // ----- EXPLORE (empty with create button) -----
       function renderExplore() {
         const grid = document.getElementById('exploreGrid');
-        const people = [
-          { id: 'p1', name: 'Sarah Chen', avatar: 'SC', title: 'UX Designer', skills: ['Figma', 'UI Design'] },
-          { id: 'p2', name: 'Marcus Rivera', avatar: 'MR', title: 'Data Scientist', skills: ['Python', 'ML'] },
-          { id: 'p3', name: 'Priya Patel', avatar: 'PP', title: 'Product Manager', skills: ['Agile', 'Strategy'] },
-          { id: 'p4', name: 'James Kim', avatar: 'JK', title: 'DevOps Engineer', skills: ['AWS', 'Kubernetes'] },
-        ];
-        grid.innerHTML = people.map(p => {
-          const isFollowing = state.follows[p.id] || false;
-          return `
-            <div class="discover-card">
-              <div class="avatar" style="margin:0 auto 0.5rem;">${p.avatar}</div>
-              <div class="name">${p.name}</div>
-              <div class="title">${p.title}</div>
-              <div style="display:flex;flex-wrap:wrap;gap:0.25rem;justify-content:center;margin:0.5rem 0;">${p.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
-              <button class="btn ${isFollowing ? 'btn-secondary' : 'btn-primary'} btn-sm" style="margin-top:0.5rem;" data-action="follow" data-id="${p.id}">
-                ${isFollowing ? '✓ Following' : 'Follow'}
-              </button>
-            </div>
-          `;
-        }).join('');
-
-        // Follow/unfollow logic
-        grid.querySelectorAll('[data-action="follow"]').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            state.follows[id] = !state.follows[id];
-            renderExplore();
-            showToast(state.follows[id] ? 'Followed!' : 'Unfollowed', 'info');
-            saveState();
-          });
-        });
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <i class="fas fa-compass"></i>
+            <h3>No content yet</h3>
+            <p>Be the first to share something amazing! Upload a Spark, project, or skill showcase.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('composerTrigger').click();"><i class="fas fa-plus"></i> Create a Spark</button>
+          </div>
+        `;
       }
 
-      // ----- EXPERTS (dynamic booking) -----
+      // ----- EXPERTS (empty with create button) -----
       function renderExperts() {
         const grid = document.getElementById('expertsGrid');
-        const experts = [
-          { name: 'Dr. Sarah Kimani', avatar: 'SK', title: 'AI/ML Specialist', skills: ['Machine Learning',
-              'Python', 'TensorFlow'
-            ], price: 150, available: true },
-          { name: 'James Ochieng', avatar: 'JO', title: 'Full-Stack Developer', skills: ['React', 'Node.js',
-              'TypeScript'
-            ], price: 120, available: true },
-          { name: 'Grace Muthoni', avatar: 'GM', title: 'UX/UI Designer', skills: ['Figma', 'UI Design',
-              'User Research'
-            ], price: 100, available: true },
-        ];
-        grid.innerHTML = experts.map(e => `
-          <div class="expert-card card">
-            <div class="top">
-              <div class="avatar">${e.avatar}</div>
-              <div class="info">
-                <h4>${e.name}</h4>
-                <div class="title">${e.title}</div>
-              </div>
-            </div>
-            <div class="skills">${e.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
-            <div class="footer">
-              <div><span class="price">$${e.price}</span> <span style="color:var(--text-muted);font-size:var(--text-sm);">/ session</span></div>
-              <span class="badge badge-green">Available</span>
-              <button class="btn btn-primary btn-sm book-expert" data-name="${e.name}"><i class="fas fa-calendar-plus"></i> Book</button>
-            </div>
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <i class="fas fa-user-tie"></i>
+            <h3>No experts yet</h3>
+            <p>Are you an expert? Share your skills and connect with professionals.</p>
+            <button class="btn btn-primary" onclick="showToast('Expert profile creation coming soon!','info');"><i class="fas fa-plus"></i> Become an Expert</button>
           </div>
-        `).join('');
-        grid.querySelectorAll('.book-expert').forEach(btn => {
-          btn.addEventListener('click', function() {
-            showToast(`Booking request sent to ${this.dataset.name}!`, 'success');
-          });
-        });
+        `;
       }
 
-      // ----- MARKET -----
+      // ----- MARKET (with external link and payment methods) -----
       function renderMarket() {
         const grid = document.getElementById('marketGrid');
         if (state.products.length === 0) {
@@ -1101,8 +1056,16 @@
               <span class="currency-badge">${p.currency || 'USD'}</span>
             </div>
             <div class="footer">
-              <span class="price">${p.currencySymbol || '$'}${p.price}</span>
-              <span style="font-size:0.7rem;color:var(--text-muted);">by ${p.seller}</span>
+              <div class="price-row">
+                <span class="price">${p.currencySymbol || '$'}${p.price}</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">by ${p.seller}</span>
+              </div>
+              ${p.paymentMethods && p.paymentMethods.length ? `
+                <div class="payment-badges">
+                  ${p.paymentMethods.map(m => `<span class="payment-badge"><i class="fas fa-credit-card"></i> ${m}</span>`).join('')}
+                </div>
+              ` : ''}
+              ${p.externalLink ? `<div class="external-link"><a href="${p.externalLink}" target="_blank"><i class="fas fa-external-link-alt"></i> ${p.externalLink}</a></div>` : ''}
               <button class="btn btn-primary btn-sm" onclick="showToast('Viewing ${p.name}...','info');"><i class="fas fa-shopping-cart"></i> View</button>
             </div>
           </div>
@@ -1111,8 +1074,7 @@
 
       // ----- CHAT, NOTIFICATIONS, PROFILE, OPPORTUNITIES, COMMUNITIES -----
       function renderChat() {
-        const list = document.getElementById('chatList');
-        list.innerHTML = `
+        document.getElementById('chatList').innerHTML = `
           <div style="text-align:center; padding:2rem; color:var(--text-muted);">
             <i class="fas fa-comments" style="font-size:2rem;"></i>
             <p style="margin-top:0.5rem;">No conversations yet. Start a chat from a profile.</p>
@@ -1123,12 +1085,8 @@
       function renderNotifications() {
         const container = document.getElementById('notificationsContainer');
         if (state.notifications.length === 0) {
-          container.innerHTML = `
-            <div style="text-align:center; padding:2rem; color:var(--text-muted);">
-              <i class="fas fa-bell" style="font-size:2rem;"></i>
-              <p style="margin-top:0.5rem;">No notifications yet.</p>
-            </div>
-          `;
+          container.innerHTML =
+            `<div style="text-align:center; padding:2rem; color:var(--text-muted);"><i class="fas fa-bell" style="font-size:2rem;"></i><p style="margin-top:0.5rem;">No notifications yet.</p></div>`;
           return;
         }
         container.innerHTML = state.notifications.map(n => `
@@ -1179,25 +1137,16 @@
       function renderOpportunities() {
         const grid = document.getElementById('opportunitiesGrid');
         if (state.opportunities.length === 0) {
-          grid.innerHTML = `
-            <div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);">
-              <i class="fas fa-briefcase" style="font-size:2rem;"></i>
-              <p style="margin-top:0.5rem;">No opportunities yet. Post one!</p>
-            </div>
-          `;
+          grid.innerHTML =
+            `<div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);"><i class="fas fa-briefcase" style="font-size:2rem;"></i><p style="margin-top:0.5rem;">No opportunities yet. Post one!</p></div>`;
           return;
         }
         grid.innerHTML = state.opportunities.map(o => `
           <div class="opportunity-card card">
-            <div class="header">
-              <h3>${o.title}</h3>
-              <span class="badge badge-blue">${o.type}</span>
-            </div>
+            <div class="header"><h3>${o.title}</h3><span class="badge badge-blue">${o.type}</span></div>
             <div class="meta"><strong>${o.company}</strong> · ${o.location}</div>
             <p style="color:var(--text-secondary); margin:0.5rem 0;">${o.description}</p>
-            <div style="display:flex; flex-wrap:wrap; gap:0.25rem; margin:0.5rem 0;">
-              ${o.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}
-            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:0.25rem; margin:0.5rem 0;">${o.skills.map(s => `<span class="badge badge-gold">${s}</span>`).join('')}</div>
             ${o.compensation ? `<div style="font-size:var(--text-sm); color:var(--text-secondary); margin-bottom:0.5rem;">💰 ${o.compensation}</div>` : ''}
             <div class="actions">
               <button class="btn btn-primary btn-sm" onclick="showToast('Application submitted for ${o.title}!','success');"><i class="fas fa-paper-plane"></i> Apply</button>
@@ -1210,12 +1159,8 @@
       function renderCommunities() {
         const grid = document.getElementById('communitiesGrid');
         if (state.communities.length === 0) {
-          grid.innerHTML = `
-            <div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);">
-              <i class="fas fa-users" style="font-size:2rem;"></i>
-              <p style="margin-top:0.5rem;">No communities yet. Create one!</p>
-            </div>
-          `;
+          grid.innerHTML =
+            `<div style="text-align:center; grid-column:1/-1; padding:2rem; color:var(--text-muted);"><i class="fas fa-users" style="font-size:2rem;"></i><p style="margin-top:0.5rem;">No communities yet. Create one!</p></div>`;
           return;
         }
         grid.innerHTML = state.communities.map(c => {
@@ -1239,7 +1184,6 @@
             </div>
           `;
         }).join('');
-        // Join/Leave logic
         grid.querySelectorAll('[data-action="join"]').forEach(btn => {
           btn.addEventListener('click', function() {
             const id = this.dataset.id;
@@ -1275,34 +1219,24 @@
         document.getElementById('composerFileInput').value = '';
         document.getElementById('mediaPreview').innerHTML = '';
         uploadedFiles = [];
-
-        document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.type === type);
-        });
-
-        const mediaTypes = ['photo', 'video'];
-        document.getElementById('mediaUploadField').style.display = mediaTypes.includes(type) ? 'block' : 'none';
+        document.querySelectorAll('.composer-types .type-btn').forEach(btn => btn.classList.toggle('active', btn.dataset
+          .type === type));
+        document.getElementById('mediaUploadField').style.display = (type === 'photo' || type === 'video') ? 'block' :
+          'none';
         document.getElementById('pollOptionsField').style.display = type === 'poll' ? 'block' : 'none';
-
         document.getElementById('composerContent').focus();
       }
 
-      function closeComposer() {
-        document.getElementById('composerModal').classList.remove('active');
-      }
+      function closeComposer() { document.getElementById('composerModal').classList.remove('active'); }
 
       document.getElementById('composerTrigger').addEventListener('click', () => openComposer('text'));
       document.getElementById('bottomPostBtn').addEventListener('click', () => openComposer('text'));
       document.getElementById('sidebarPostBtn').addEventListener('click', () => openComposer('text'));
-
       document.querySelectorAll('.composer-types .type-btn').forEach(btn => {
         btn.addEventListener('click', function() { openComposer(this.dataset.type); });
       });
-
       document.getElementById('composerModalClose').addEventListener('click', closeComposer);
-      document.getElementById('composerModal').addEventListener('click', function(e) {
-        if (e.target === this) closeComposer();
-      });
+      document.getElementById('composerModal').addEventListener('click', function(e) { if (e.target === this) closeComposer(); });
 
       document.getElementById('composerFileInput').addEventListener('change', function() {
         const preview = document.getElementById('mediaPreview');
@@ -1313,16 +1247,15 @@
           reader.onload = function(e) {
             const div = document.createElement('div');
             div.className = 'preview-item';
-            div.style.cssText = 'position:relative;width:80px;height:80px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2rem;';
+            div.style.cssText =
+              'position:relative;width:80px;height:80px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2rem;';
             if (file.type.startsWith('image/')) {
               div.innerHTML =
                 `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />`;
             } else if (file.type.startsWith('video/')) {
               div.innerHTML =
                 `<video src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></video>`;
-            } else {
-              div.innerHTML = `<i class="fas fa-file"></i>`;
-            }
+            } else { div.innerHTML = `<i class="fas fa-file"></i>`; }
             div.innerHTML +=
               `<button class="remove" data-index="${i}" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>`;
             preview.appendChild(div);
@@ -1340,14 +1273,12 @@
       document.getElementById('composerPublishBtn').addEventListener('click', function() {
         const content = document.getElementById('composerContent').value.trim();
         if (!content) { showToast('Please add content.', 'warning'); return; }
-
         const skills = document.getElementById('composerSkills').value.split(',').map(s => s.trim()).filter(Boolean);
         const pollOptionsText = document.getElementById('composerPollOptions').value.trim();
         let pollOptions = null;
         if (selectedType === 'poll' && pollOptionsText) {
           pollOptions = pollOptionsText.split('\n').map(s => s.trim()).filter(Boolean);
         }
-
         const media = [];
         if (uploadedFiles.length > 0) {
           const file = uploadedFiles[0];
@@ -1356,7 +1287,6 @@
           else if (file.type.startsWith('video/')) mediaType = 'video';
           media.push({ type: mediaType, url: URL.createObjectURL(file) });
         }
-
         const newSpark = {
           id: uid(),
           authorId: state.user.id,
@@ -1377,7 +1307,6 @@
           pollOptions: pollOptions,
           pollVotes: pollOptions ? Object.fromEntries(pollOptions.map(o => [o, 0])) : null
         };
-
         state.sparks.unshift(newSpark);
         renderFeed();
         closeComposer();
@@ -1386,19 +1315,10 @@
       });
 
       // ================================================================
-      // PRODUCT MODAL
+      // PRODUCT MODAL (with external link & payment methods)
       // ================================================================
-      const currencySymbols = {
-        USD: '$',
-        KES: 'KSh',
-        EUR: '€',
-        GBP: '£',
-        NGN: '₦',
-        ZAR: 'R',
-        GHS: '₵',
-        TZS: 'TSh',
-        UGX: 'USh'
-      };
+      const currencySymbols = { USD: '$', KES: 'KSh', EUR: '€', GBP: '£', NGN: '₦', ZAR: 'R', GHS: '₵', TZS: 'TSh',
+        UGX: 'USh' };
 
       document.getElementById('showProductModal').addEventListener('click', function() {
         document.getElementById('productModal').classList.add('active');
@@ -1416,10 +1336,14 @@
         const price = parseFloat(document.getElementById('productPrice').value);
         const currency = document.getElementById('productCurrency').value;
         const type = document.getElementById('productType').value;
+        const externalLink = document.getElementById('productLink').value.trim();
+        const paymentMethods = Array.from(document.querySelectorAll('.payment-method:checked')).map(el => el.value);
+
         if (!name || !desc || isNaN(price)) {
           showToast('Please fill in all fields.', 'error');
           return;
         }
+
         const newProduct = {
           id: uid(),
           name,
@@ -1430,7 +1354,9 @@
           type,
           image: '📦',
           seller: state.user.name,
-          rating: 0
+          rating: 0,
+          externalLink: externalLink || null,
+          paymentMethods: paymentMethods.length ? paymentMethods : null
         };
         state.products.unshift(newProduct);
         renderMarket();
@@ -1438,6 +1364,8 @@
         document.getElementById('productName').value = '';
         document.getElementById('productDesc').value = '';
         document.getElementById('productPrice').value = '';
+        document.getElementById('productLink').value = '';
+        document.querySelectorAll('.payment-method').forEach(el => el.checked = false);
         showToast('Product listed successfully!', 'success');
         saveState();
       });
@@ -1463,22 +1391,10 @@
         const location = document.getElementById('oppLocation').value.trim();
         const skills = document.getElementById('oppSkills').value.split(',').map(s => s.trim()).filter(Boolean);
         const compensation = document.getElementById('oppCompensation').value.trim();
-        if (!title || !company || !desc) {
-          showToast('Please fill in title, company, and description.', 'error');
-          return;
-        }
-        const newOpp = {
-          id: uid(),
-          title,
-          company,
-          description: desc,
-          type,
-          location: location || 'Remote',
-          skills,
-          compensation: compensation || 'Competitive',
-          creator: state.user.name,
-          createdAt: new Date().toISOString()
-        };
+        if (!title || !company || !desc) { showToast('Please fill in title, company, and description.',
+          'error'); return; }
+        const newOpp = { id: uid(), title, company, description: desc, type, location: location || 'Remote',
+          skills, compensation: compensation || 'Competitive', creator: state.user.name };
         state.opportunities.unshift(newOpp);
         renderOpportunities();
         document.getElementById('opportunityModal').classList.remove('active');
@@ -1493,7 +1409,7 @@
       });
 
       // ================================================================
-      // COMMUNITY MODAL (Group/Page)
+      // COMMUNITY MODAL
       // ================================================================
       document.getElementById('showCommunityModal').addEventListener('click', function() {
         document.getElementById('communityModal').classList.add('active');
@@ -1510,20 +1426,9 @@
         const desc = document.getElementById('communityDesc').value.trim();
         const type = document.getElementById('communityType').value;
         const category = document.getElementById('communityCategory').value;
-        if (!name || !desc) {
-          showToast('Please fill in all fields.', 'error');
-          return;
-        }
-        const newCommunity = {
-          id: uid(),
-          name,
-          description: desc,
-          type: type,
-          category,
-          members: 1,
-          creator: state.user.name,
-          createdAt: new Date().toISOString()
-        };
+        if (!name || !desc) { showToast('Please fill in all fields.', 'error'); return; }
+        const newCommunity = { id: uid(), name, description: desc, type, category, members: 1,
+          creator: state.user.name };
         state.communities.unshift(newCommunity);
         renderCommunities();
         document.getElementById('communityModal').classList.remove('active');
@@ -1554,11 +1459,11 @@
       // ================================================================
       // SIDEBAR TOGGLE
       // ================================================================
-      document.getElementById('sidebarToggle').addEventListener('click', () => {
+      document.getElementById('sidebarToggle').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('open');
         document.getElementById('sidebarOverlay').classList.toggle('show');
       });
-      document.getElementById('sidebarOverlay').addEventListener('click', () => {
+      document.getElementById('sidebarOverlay').addEventListener('click', function() {
         document.getElementById('sidebar').classList.remove('open');
         document.getElementById('sidebarOverlay').classList.remove('show');
       });
@@ -1566,13 +1471,13 @@
       // ================================================================
       // NAVIGATION LINKS
       // ================================================================
-      document.querySelectorAll('.sidebar .nav-link[data-page]').forEach(link => {
+      document.querySelectorAll('.sidebar .nav-link[data-page]').forEach(function(link) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           navigateTo(this.dataset.page);
         });
       });
-      document.querySelectorAll('.bottom-nav .nav-item[data-page]').forEach(link => {
+      document.querySelectorAll('.bottom-nav .nav-item[data-page]').forEach(function(link) {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           navigateTo(this.dataset.page);
@@ -1582,13 +1487,12 @@
       // ================================================================
       // SETTINGS TABS
       // ================================================================
-      document.querySelectorAll('.settings-tab').forEach(tab => {
+      document.querySelectorAll('.settings-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
-          document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.settings-tab').forEach(function(t) { t.classList.remove('active'); });
           this.classList.add('active');
-          const target = this.dataset.tab;
-          document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
-          document.getElementById(`settings-${target}`).classList.add('active');
+          document.querySelectorAll('.settings-section').forEach(function(s) { s.classList.remove('active'); });
+          document.getElementById('settings-' + this.dataset.tab).classList.add('active');
         });
       });
 
@@ -1606,26 +1510,20 @@
         if (bio) state.user.bio = bio;
         state.user.avatar = getInitials(state.user.name);
         renderProfile();
-        document.querySelectorAll('.user-avatar').forEach(el => {
+        document.querySelectorAll('.user-avatar').forEach(function(el) {
           if (state.user.avatarData) {
             el.innerHTML =
               `<img src="${state.user.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
-          } else {
-            el.textContent = state.user.avatar;
-          }
+          } else { el.textContent = state.user.avatar; }
         });
         showToast('Settings saved!', 'success');
         saveState();
       });
 
-      document.getElementById('privacySave').addEventListener('click', function() {
-        showToast('Privacy settings saved!', 'success');
-      });
-
-      document.getElementById('notifSave').addEventListener('click', function() {
-        showToast('Notification preferences saved!', 'success');
-      });
-
+      document.getElementById('privacySave').addEventListener('click', function() { showToast('Privacy settings saved!',
+          'success'); });
+      document.getElementById('notifSave').addEventListener('click', function() { showToast(
+          'Notification preferences saved!', 'success'); });
       document.getElementById('appearanceSave').addEventListener('click', function() {
         const theme = document.getElementById('appearanceTheme').value;
         if (theme === 'dark') {
@@ -1646,7 +1544,7 @@
         if (confirm('Sign out?')) {
           localStorage.removeItem('skilorax_prod_state');
           showToast('Signed out.', 'info');
-          setTimeout(() => window.location.reload(), 500);
+          setTimeout(function() { window.location.reload(); }, 500);
         }
       });
 
@@ -1664,15 +1562,13 @@
         const bio = prompt('Bio:', u.bio);
         if (bio !== null) u.bio = bio.trim() || u.bio;
         const skills = prompt('Skills (comma separated):', u.skills.join(', '));
-        if (skills !== null) u.skills = skills.split(',').map(s => s.trim()).filter(Boolean);
+        if (skills !== null) u.skills = skills.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
         u.avatar = getInitials(u.name);
         renderProfile();
-        document.querySelectorAll('.user-avatar').forEach(el => {
+        document.querySelectorAll('.user-avatar').forEach(function(el) {
           if (u.avatarData) {
             el.innerHTML = `<img src="${u.avatarData}" alt="avatar" style="width:100%;height:100%;object-fit:cover;" />`;
-          } else {
-            el.textContent = u.avatar;
-          }
+          } else { el.textContent = u.avatar; }
         });
         showToast('Profile updated!', 'success');
         saveState();
@@ -1684,14 +1580,12 @@
       document.getElementById('exploreSearchBtn').addEventListener('click', function() {
         const q = document.getElementById('exploreSearch').value.trim();
         if (q) {
-          const results = state.sparks.filter(s =>
-            s.content.toLowerCase().includes(q.toLowerCase()) ||
-            s.skills.some(sk => sk.toLowerCase().includes(q.toLowerCase()))
-          );
-          showToast(`Found ${results.length} Sparks matching "${q}"`, 'info');
-        } else {
-          showToast('Enter a search term.', 'warning');
-        }
+          const results = state.sparks.filter(function(s) {
+            return s.content.toLowerCase().includes(q.toLowerCase()) || s.skills.some(function(sk) { return sk
+                .toLowerCase().includes(q.toLowerCase()); });
+          });
+          showToast('Found ' + results.length + ' Sparks matching "' + q + '"', 'info');
+        } else { showToast('Enter a search term.', 'warning'); }
       });
       document.getElementById('exploreSearch').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') document.getElementById('exploreSearchBtn').click();
@@ -1707,7 +1601,7 @@
         }
         if (e.key === 'Escape') {
           closeComposer();
-          document.querySelectorAll('.modal-overlay.active').forEach(el => el.classList.remove('active'));
+          document.querySelectorAll('.modal-overlay.active').forEach(function(el) { el.classList.remove('active'); });
         }
       });
 
