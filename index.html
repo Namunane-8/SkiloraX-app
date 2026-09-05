@@ -1021,64 +1021,6 @@
             background: #ffecb3;
             color: #e65100
         }
-        @media(max-width:1024px) {
-            .main {
-                padding: 1.25rem
-            }
-        }
-        @media(max-width:768px) {
-            .sidebar-toggle {
-                display: block
-            }
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px
-            }
-            .sidebar.open {
-                transform: translateX(0)
-            }
-            .sidebar-overlay.show {
-                display: block
-            }
-            .main {
-                margin-left: 0;
-                padding: 4rem .75rem calc(var(--bottom-nav-height)+1rem)
-            }
-            .bottom-nav {
-                display: flex
-            }
-            .toast-container {
-                bottom: calc(var(--bottom-nav-height)+1rem);
-                right: 1rem;
-                left: 1rem;
-                max-width: 100%
-            }
-            .modal-content {
-                padding: 1rem;
-                margin: .5rem
-            }
-            .composer-types .type-btn {
-                font-size: .6rem;
-                padding: .2rem .5rem
-            }
-            .composer-types .type-btn i {
-                font-size: .7rem
-            }
-        }
-        @media(max-width:480px) {
-            .composer-types .type-btn {
-                font-size: .55rem;
-                padding: .15rem .4rem
-            }
-            .composer-types .type-btn i {
-                font-size: .65rem
-            }
-        }
-        *:focus-visible {
-            outline: 3px solid #fbbf24;
-            outline-offset: 2px
-        }
-        /* Expert card styles */
         .expert-card {
             background: var(--surface);
             border-radius: var(--radius-lg);
@@ -1172,6 +1114,63 @@
             .expert-grid {
                 grid-template-columns: 1fr 1fr;
             }
+        }
+        @media(max-width:1024px) {
+            .main {
+                padding: 1.25rem
+            }
+        }
+        @media(max-width:768px) {
+            .sidebar-toggle {
+                display: block
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px
+            }
+            .sidebar.open {
+                transform: translateX(0)
+            }
+            .sidebar-overlay.show {
+                display: block
+            }
+            .main {
+                margin-left: 0;
+                padding: 4rem .75rem calc(var(--bottom-nav-height)+1rem)
+            }
+            .bottom-nav {
+                display: flex
+            }
+            .toast-container {
+                bottom: calc(var(--bottom-nav-height)+1rem);
+                right: 1rem;
+                left: 1rem;
+                max-width: 100%
+            }
+            .modal-content {
+                padding: 1rem;
+                margin: .5rem
+            }
+            .composer-types .type-btn {
+                font-size: .6rem;
+                padding: .2rem .5rem
+            }
+            .composer-types .type-btn i {
+                font-size: .7rem
+            }
+        }
+        @media(max-width:480px) {
+            .composer-types .type-btn {
+                font-size: .55rem;
+                padding: .15rem .4rem
+            }
+            .composer-types .type-btn i {
+                font-size: .65rem
+            }
+        }
+        *:focus-visible {
+            outline: 3px solid #fbbf24;
+            outline-offset: 2px
         }
     </style>
 </head>
@@ -1643,7 +1642,6 @@
                     if (saved) {
                         const parsed = JSON.parse(saved);
                         Object.assign(state, parsed);
-                        // Ensure nested objects exist
                         if (!state.user) state.user = {};
                         if (!state.experts) state.experts = [];
                         return true;
@@ -2009,7 +2007,6 @@
 
                 modal.classList.add('active');
 
-                // Attach detail events
                 content.querySelectorAll('.like-btn-detail').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var sid = this.dataset.id;
@@ -2143,7 +2140,6 @@
                 var grid = document.getElementById('expertsGrid');
                 if (!grid) return;
 
-                // Include the current user if they are an expert
                 var allExperts = [];
                 if (state.user.isExpert && state.user.expertDetails) {
                     allExperts.push({
@@ -2161,7 +2157,6 @@
                         availability: state.user.expertDetails.availability || 'Available'
                     });
                 }
-                // Add any other experts from state.experts
                 if (state.experts && state.experts.length) {
                     state.experts.forEach(function(e) {
                         if (e.id !== state.user.id) {
@@ -2234,14 +2229,10 @@
             }
 
             // ===== CHAT =====
-            function renderChat() {
-                // Already static
-            }
+            function renderChat() {}
 
             // ===== NOTIFICATIONS =====
-            function renderNotifications() {
-                // Already static
-            }
+            function renderNotifications() {}
 
             // ===== PROFILE =====
             function renderProfile() {
@@ -2304,7 +2295,6 @@
                         el.textContent = u.avatar || getInitials(u.name);
                     }
                 });
-                // Edit form
                 var editName = document.getElementById('editName');
                 if (editName) editName.value = u.name;
                 var editTitle = document.getElementById('editTitle');
@@ -2316,7 +2306,6 @@
                 var editSkillsInput = document.getElementById('editSkillsInput');
                 if (editSkillsInput) editSkillsInput.value = u.skills ? u.skills.join(', ') : '';
                 renderSkillTags(u.skills || []);
-                // Edit previews
                 var editCoverPreview = document.getElementById('editCoverPreview');
                 if (editCoverPreview) {
                     if (u.coverData) {
@@ -2351,7 +2340,6 @@
                         if (ar) ar.style.display = 'none';
                     }
                 }
-                // Expert form pre-fill
                 if (u.isExpert && u.expertDetails) {
                     var et = document.getElementById('expertTitle');
                     if (et) et.value = u.expertDetails.title || '';
@@ -2692,7 +2680,6 @@
                 state.user.bio = bio;
                 state.user.skills = skills;
 
-                // Also add to experts list
                 if (!state.experts) state.experts = [];
                 var existing = state.experts.findIndex(function(e) { return e.id === state.user.id; });
                 if (existing >= 0) {
@@ -2731,7 +2718,6 @@
                 closeExpertModal();
                 showToast('🎉 You are now a verified expert!', 'success');
                 saveState();
-                // Refresh experts page if open
                 if (state.currentPage === 'experts') renderExperts();
             });
 
@@ -3081,7 +3067,6 @@
             var composerSkills = [];
 
             function openComposer(type) {
-                // Redirect special types
                 if (type === 'product') {
                     document.getElementById('productModal').classList.add('active');
                     return;
@@ -3475,7 +3460,6 @@
                 state.user.avatar = 'SK';
                 state.user.title = 'Professional';
                 state.user.location = 'Nairobi, Kenya';
-                // Add sample data
                 state.sparks = [{
                     id: uid(),
                     authorId: 'user_1',
@@ -3508,7 +3492,6 @@
                 saveState();
             }
 
-            // Ensure experts list includes the user if they are an expert
             if (state.user.isExpert && state.user.expertDetails && state.experts) {
                 var exists = state.experts.some(function(e) { return e.id === state.user.id; });
                 if (!exists) {
